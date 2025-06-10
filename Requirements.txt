@@ -1,0 +1,10 @@
+streamlit
+moviepy
+requests
+transformers
+torchaudio
+torch
+openai-whisper
+faster-whisper
+ffmpeg-python
+numpy
