@@ -3,7 +3,7 @@ streamlit
 moviepy
 requests
 speechbrain==0.5.14
-torch==2.7.0
+torch
 transformers
 faster-whisper
 numpy
