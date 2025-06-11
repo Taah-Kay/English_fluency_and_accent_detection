@@ -6,7 +6,7 @@ import requests
 import tempfile
 import tempfile
 import torchaudio
-from speechbrain.pretrained.interfaces import foreign_class
+from speechbrain.interfaces import foreign_class
 
 def download_video_from_url(url):
     """
