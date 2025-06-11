@@ -7,8 +7,8 @@ from moviepy import VideoFileClip
 import os
 import requests
 import tempfile
-import torchaudio
-import torchvision
+#import torchaudio
+#import torchvision
 
 
 def download_video_from_url(url):
