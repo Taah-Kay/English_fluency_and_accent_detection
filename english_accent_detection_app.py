@@ -81,18 +81,16 @@ if option == "Upload video file":
     uploaded_video = st.file_uploader("Upload your video", type=["mp4", "mov", "avi", "mkv"])
     if uploaded_video is not None:
 
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(video_file.read())
-            video_path = temp_file.name
+        #with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            #temp_file.write(video_file.read())
+            #video_path = temp_file.name
             
-        '''temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+        temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
         with open(temp_video_path.name, "wb") as f:
             f.write(uploaded_video.read())
-        video_path = temp_video_path.name'''
+        video_path = temp_video_path.name
         st.success("Video uploaded successfully.")
         
-
-
 elif option == "Enter direct MP4 URL":
     video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
     if st.button("Download Video"):
