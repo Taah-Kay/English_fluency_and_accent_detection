@@ -57,13 +57,19 @@ def extract_audio(video_path):
 # -----------------------
 @st.cache_resource
 def load_accent_model():
-    classifier = pipeline("audio-classification", model="sreyan88/ECAPA-TDNN_American_British_Australian")
+    classifier = foreign_class(
+        source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
+        pymodule_file="custom_interface.py",
+        classname="CustomEncoderWav2vec2Classifier"
+    )
     return classifier
 
 def analyze_accent(audio_path):
     classifier = load_accent_model()
-    result = classifier(audio_path)
-    return result
+    out_prob, score, index, label = classifier.classify_file(audio_path)
+    score *= 100  # Return score as percentage
+    
+    return label, score
 
 # Streamlit UI
 st.title("🎙️ English Accent Audio Detector")
