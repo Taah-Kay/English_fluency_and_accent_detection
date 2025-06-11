@@ -1,18 +1,15 @@
 import sys
 import streamlit as st
 
-# Disable watching torch, which avoids torch.classes error
-if "torch" in sys.modules:
-    del sys.modules["torch"]
+
     
 from moviepy import VideoFileClip   
 import os
 import requests
 import tempfile
-import tempfile
 import torchaudio
 import torchvision
-from speechbrain.pretrained.interfaces import foreign_class
+
 
 def download_video_from_url(url):
     """
@@ -56,6 +53,7 @@ def extract_audio(video_path):
 # -----------------------
 @st.cache_resource
 def load_accent_model():
+    from speechbrain.pretrained.interfaces import foreign_class
     classifier = foreign_class(
         source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
         pymodule_file="custom_interface.py",
