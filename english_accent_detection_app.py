@@ -104,20 +104,71 @@ if video_path:
 
              # Analyze the audio
             st.info("Analyzing accent...")
-            results = analyze_accent(audio_path)
-            confidence = top_result['score'] * 100
+            accent, confidence = analyze_accent(audio_path)  # get the predicted accent and confidence score from the model
+            
 
             # Show top prediction and score
-            top_result = results[0]
-            st.subheader("🎧 Accent Detection Result")
-            st.write(f"The speaker in the video has a **{top_result['label']}** accent. ")
-            f"The speaker in the video has a **{accent}** accent."
-            st.write(f"**Confidence Score:** {top_result['score']*100:.2f}%")
+            import streamlit as st
+import tempfile
+import moviepy.editor as mp
+import os
+import torchaudio
+from speechbrain.pretrained.interfaces import foreign_class
 
-            # Add a short summary about the confidence
-            if confidence > 85:
-                st.success("✅ The model is highly confident in this prediction.")
-            elif confidence > 60:
-                st.info("ℹ️ The model is reasonably confident, but there may be some overlap with other accents.")
-            else:
-                st.warning("⚠️ The model has low confidence in this result. Consider reviewing the audio quality or providing a clearer sample.")
+# Load SpeechBrain model
+@st.cache_resource
+def load_accent_model():
+    classifier = foreign_class(
+        source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
+        pymodule_file="custom_interface.py",
+        classname="CustomEncoderWav2vec2Classifier"
+    )
+    return classifier
+
+# Extract audio from video URL
+def extract_audio_from_video(video_path):
+    video = mp.VideoFileClip(video_path)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_audio:
+        audio_path = tmp_audio.name
+        video.audio.write_audiofile(audio_path, codec='pcm_s16le')
+    return audio_path
+
+# Classify accent
+def classify_accent(audio_path, classifier):
+    out_prob, score, index, label = classifier.classify_file(audio_path)
+    return label, score * 100  # Return score as percentage
+
+# Streamlit App
+st.title("🎙️ English Accent Classifier with Fluency & Transcription")
+
+video_url = st.text_input("Enter public video URL (MP4 or Loom link):")
+
+if video_url:
+    with st.spinner("Downloading and processing video..."):
+        # Download video file
+        video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
+        video_content = requests.get(video_url)
+        with open(video_path, 'wb') as f:
+            f.write(video_content.content)
+
+        # Extract audio
+        audio_path = extract_audio_from_video(video_path)
+
+        # Load model and classify
+        classifier = load_accent_model()
+        accent, confidence = classify_accent(audio_path, classifier)
+
+        # Display results
+        st.subheader("🎧 Accent Detection Result")
+        st.write(f"The speaker in the video has a **{accent}** accent.")
+        st.write(f"**Confidence Score:** {confidence:.2f}%")
+
+        # Summary
+        if confidence > 85:
+            st.success("✅ The model is highly confident in this prediction.")
+        elif confidence > 60:
+            st.info("ℹ️ The model is reasonably confident, but there may be overlap with other accents.")
+        else:
+            st.warning("⚠️ The model has low confidence in this result. Consider using a clearer audio sample.")
+
+            
