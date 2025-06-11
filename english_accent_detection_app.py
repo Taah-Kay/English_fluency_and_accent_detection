@@ -6,6 +6,7 @@ import requests
 import tempfile
 import tempfile
 import torchaudio
+import torchvision
 from speechbrain.pretrained.interfaces import foreign_class
 
 def download_video_from_url(url):
