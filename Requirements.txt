@@ -1,11 +1,12 @@
 streamlit
-moviepy
+moviepy==1.0.3
+imageio==2.31.1
+imageio-ffmpeg==0.4.8
 requests
-transformers
+speechbrain
 torchaudio
 torch
+transformers
 openai-whisper
 faster-whisper
-ffmpeg-python
 numpy
-speechbrain
