@@ -2,7 +2,7 @@
 streamlit
 moviepy
 requests
-speechbrain
+speechbrain==0.5.14
 torch==2.7.0
 torchaudio==2.7.0
 transformers
