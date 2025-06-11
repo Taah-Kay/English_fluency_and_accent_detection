@@ -9,6 +9,5 @@ speechbrain
 torchaudio
 torch
 transformers
-openai-whisper
 faster-whisper
 numpy
