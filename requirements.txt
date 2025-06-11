@@ -1,6 +1,5 @@
 streamlit
-sentencepiece==0.1.99
-moviepy==2.2.1
+moviepy
 requests
 speechbrain
 torchaudio
