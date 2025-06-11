@@ -10,7 +10,16 @@ Parsing the video Link and downloading it
 """
 
 import streamlit as st
-from moviepy import VideoFileClip
+from moviepy import (
+    VideoClip,
+    VideoFileClip,
+    ImageSequenceClip,
+    ImageClip,
+    TextClip,
+    ColorClip,
+    AudioFileClip,
+    AudioClip,
+)
 import os
 import requests
 import tempfile
