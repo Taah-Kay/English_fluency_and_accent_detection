@@ -110,9 +110,7 @@ if video_path:
             accent, confidence = analyze_accent(audio_path)  # get the predicted accent and confidence score from the model
             
 
-            # Show top prediction and score
-            import streamlit as st
-
+            
 
 # Load SpeechBrain model
 @st.cache_resource
