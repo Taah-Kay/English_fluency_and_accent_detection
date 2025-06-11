@@ -78,12 +78,15 @@ option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP
 video_path = None
 
 if option == "Upload video file":
-    uploaded_video = st.file_uploader("Upload your video", type=["mp4", "mov", "avi"])
+    uploaded_video = st.file_uploader("Upload your video", type=["mp4", "mov", "avi", "mkv"])
     if uploaded_video is not None:
-        temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
+            temp_video.write(uploaded_video.read())
+            video_path = temp_video.name
+        '''temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
         with open(temp_video_path.name, "wb") as f:
             f.write(uploaded_video.read())
-        video_path = temp_video_path.name
+        video_path = temp_video_path.name'''
         st.success("Video uploaded successfully.")
 
 elif option == "Enter direct MP4 URL":
