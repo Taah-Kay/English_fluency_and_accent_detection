@@ -14,6 +14,9 @@ from moviepy import VideoFileClip
 import os
 import requests
 import tempfile
+import tempfile
+import torchaudio
+from speechbrain.pretrained.interfaces import foreign_class
 
 def download_video_from_url(url):
     """
@@ -109,11 +112,7 @@ if video_path:
 
             # Show top prediction and score
             import streamlit as st
-import tempfile
-import moviepy.editor as mp
-import os
-import torchaudio
-from speechbrain.pretrained.interfaces import foreign_class
+
 
 # Load SpeechBrain model
 @st.cache_resource
