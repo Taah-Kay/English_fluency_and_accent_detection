@@ -89,7 +89,7 @@ if option == "Upload video file":
         with open(temp_video_path.name, "wb") as f:
             f.write(uploaded_video.read())
         video_path = temp_video_path.name'''
-            st.success("Video uploaded successfully.")
+        st.success("Video uploaded successfully.")
 
 elif option == "Enter direct MP4 URL":
     video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
