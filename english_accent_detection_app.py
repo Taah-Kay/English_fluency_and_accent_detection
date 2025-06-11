@@ -91,9 +91,7 @@ if option == "Upload video file":
         video_path = temp_video_path.name'''
         st.success("Video uploaded successfully.")
         
-st.write(f"File name: {uploaded_video.name}")
-st.write(f"File size: {uploaded_video.size}")
-st.audio(uploaded_video)
+
 
 elif option == "Enter direct MP4 URL":
     video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
