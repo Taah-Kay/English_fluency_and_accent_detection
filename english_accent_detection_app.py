@@ -1,5 +1,10 @@
 
 import streamlit as st
+
+# Disable watching torch, which avoids torch.classes error
+if "torch" in sys.modules:
+    del sys.modules["torch"]
+    
 from moviepy import VideoFileClip   
 import os
 import requests
