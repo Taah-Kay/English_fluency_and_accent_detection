@@ -114,7 +114,7 @@ if video_path:
             # Display results
             st.subheader("🎧 Accent Detection Result")
             st.write(f"The speaker in the video has a **{accent}** accent.")
-            st.write(f"**Confidence Score:** **{confidence:.2f}** %")
+            st.write(f"Confidence Score: **{confidence:.2f}**%")
 
             # Summary
             if confidence > 85:
