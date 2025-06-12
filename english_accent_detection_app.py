@@ -1,24 +1,14 @@
 import sys
 import streamlit as st
 
-import sys, types
-import streamlit as st
-
-try:
-    import torch
-    if isinstance(torch.classes, types.ModuleType):
-        del sys.modules["torch.classes"]
-except Exception:
-    pass
-
-
 
 from moviepy import VideoFileClip   
 import os
 import requests
 import tempfile
-#import torchaudio
-#import torchvision
+import torchaudio
+import torchvision
+torch.classes.__path__ = [os.path.join(torch.__path__[0], torch.classes.__file__)]
 
 
 def download_video_from_url(url):
