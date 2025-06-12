@@ -67,7 +67,7 @@ def analyze_accent(audio_path):
     classifier = load_accent_model()
     out_prob, score, index, label = classifier.classify_file(audio_path)
     #score = round(score[0].item() * 100, 2)  # Return score as percentage
-     st.success("classified successfully.")
+    st.success("classified successfully.")
     return label, score
 
 # Streamlit UI
