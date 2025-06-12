@@ -6,7 +6,7 @@ from moviepy import VideoFileClip
 import os
 import requests
 import tempfile
-torch.classes.__path__ = [os.path.join(torch.__path__[0], torch.classes.__file__)]
+
 
 
 def download_video_from_url(url):
@@ -51,6 +51,8 @@ def extract_audio(video_path):
 # -----------------------
 @st.cache_resource
 def load_accent_model():
+    import torch
+    import torchaudio
     from speechbrain.pretrained.interfaces import foreign_class
     classifier = foreign_class(
         source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
