@@ -2,7 +2,7 @@ import sys
 import streamlit as st
 
 
-from moviepy import VideoFileClip   
+from moviepy.editor import VideoFileClip  
 import os
 import requests
 import tempfile
