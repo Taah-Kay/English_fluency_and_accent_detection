@@ -60,6 +60,7 @@ def load_accent_model():
         pymodule_file="custom_interface.py",
         classname="CustomEncoderWav2vec2Classifier"
     )
+    st.success("Model loaded successfully.")
     return classifier
 
 def analyze_accent(audio_path):
