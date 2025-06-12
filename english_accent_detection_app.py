@@ -108,7 +108,12 @@ if video_path:
 
              # Analyze the audio
             st.info("Analyzing accent...")
-            accent, confidence = analyze_accent(audio_path)  # get the predicted accent and confidence score from the model
+            try:
+                accent, confidence = analyze_accent(audio_path)  # get the predicted accent and confidence score from the model
+            except Exception as e:
+                st.error(f"Error during accent analysis: {e}")
+                st.stop()
+             
             
 
             # Display results
