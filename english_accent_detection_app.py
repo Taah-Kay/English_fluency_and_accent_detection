@@ -1,6 +1,18 @@
 import sys
 import streamlit as st
-import torch
+
+import sys, types
+import streamlit as st
+
+try:
+    import torch
+    if isinstance(torch.classes, types.ModuleType):
+        del sys.modules["torch.classes"]
+except Exception:
+    pass
+
+
+
 from moviepy import VideoFileClip   
 import os
 import requests
