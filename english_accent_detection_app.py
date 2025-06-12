@@ -3,7 +3,8 @@ from moviepy.editor import VideoFileClip
 import requests
 import tempfile
 
-
+from huggingface_hub import login
+import os
 # -------------------------------
 # Utility Function: Download Video
 # -------------------------------
@@ -53,11 +54,17 @@ def extract_audio(video_path):
 # -------------------------------
 # Load Model (Cached)
 # -------------------------------
-@st.cache_resource
+@st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
 def load_accent_model():
+    # Authenticate with Hugging Face to avoid 429 errors
+    hf_token = os.getenv("HF_TOKEN")
+    if hf_token:
+        login(token=hf_token)
     """
     Loads the pre-trained accent classification model from HuggingFace.
     """
+    login(token=os.getenv("HF_TOKEN"))
+    
     st.write("🔧 Initializing PyTorch and model...")
     from speechbrain.pretrained.interfaces import foreign_class
     import torchaudio
