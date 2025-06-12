@@ -1,5 +1,5 @@
 
-streamlit==1.2.0
+streamlit
 moviepy
 requests
 speechbrain==0.5.14
