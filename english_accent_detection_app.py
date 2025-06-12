@@ -66,7 +66,7 @@ def load_accent_model():
 def analyze_accent(audio_path):
     classifier = load_accent_model()
     out_prob, score, index, label = classifier.classify_file(audio_path)
-    score = round(score[0].item() * 100, 2)  # Return score as percentage
+    #score = round(score[0].item() * 100, 2)  # Return score as percentage
     
     return label, score
 
