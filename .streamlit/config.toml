@@ -1,4 +1,5 @@
 [server]
+fileWatcherType = "none"
 enableCORS = false
 enableXsrfProtection = false
 watchFilesystem = false
