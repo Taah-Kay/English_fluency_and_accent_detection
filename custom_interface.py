@@ -141,16 +141,21 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
             List with the text labels corresponding to the indexes.
             (label encoder should be provided).
         """
-        waveform = self.load_audio(path)
-        # Fake a batch:
-        batch = waveform.unsqueeze(0)
-        rel_length = torch.tensor([1.0])
-        outputs = self.encode_batch(batch, rel_length)
-        outputs = self.mods.output_mlp(outputs).squeeze(1)
-        out_prob = self.hparams.softmax(outputs)
-        score, index = torch.max(out_prob, dim=-1)
-        text_lab = self.hparams.label_encoder.decode_torch(index)
-        return out_prob, score, index, text_lab
+        try:
+            waveform = self.load_audio(path)
+            # Fake a batch:
+            batch = waveform.unsqueeze(0)
+            rel_length = torch.tensor([1.0])
+            outputs = self.encode_batch(batch, rel_length)
+            outputs = self.mods.output_mlp(outputs)
+            #outputs = self.mods.output_mlp(outputs).squeeze(1) potential to break the app
+            out_prob = self.hparams.softmax(outputs)
+            score, index = torch.max(out_prob, dim=-1)
+            text_lab = self.hparams.label_encoder.decode_torch(index)
+            return out_prob, score, index, text_lab
+        except Exception as e:
+            print(f"[ERROR] classify_file failed: {e}")
+            raise
 
     def forward(self, wavs, wav_lens=None, normalize=False):
         return self.encode_batch(
