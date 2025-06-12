@@ -63,7 +63,7 @@ def load_accent_model():
     """
     Loads the pre-trained accent classification model from HuggingFace.
     """
-    login(token=os.getenv("HF_TOKEN"))
+    login(token=os.getenv("hf_token"))
     
     st.write("🔧 Initializing PyTorch and model...")
     from speechbrain.pretrained.interfaces import foreign_class
