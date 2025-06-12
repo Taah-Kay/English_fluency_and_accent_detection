@@ -1,4 +1,4 @@
 [server]
 enableCORS = false
 enableXsrfProtection = false
-server.watchFilesystem = false
+watchFilesystem = false
