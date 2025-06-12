@@ -54,7 +54,7 @@ def load_accent_model():
     import torchaudio
     st.write("PyTorch and Streamlit are working together!")
     from speechbrain.pretrained.interfaces import foreign_class
-    try
+    try:
         classifier = foreign_class(
             source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
             pymodule_file="custom_interface.py",
@@ -70,7 +70,7 @@ def analyze_accent(audio_path):
     classifier = load_accent_model()
     try:
         out_prob, score, index, label = classifier.classify_file(audio_path)
-    #score = round(score[0].item() * 100, 2)  # Return score as percentage
+        score = round(score[0].item() * 100, 2)  # Return score as percentage
     except Exception as e:
         st.error(f"Error during accent accent classification: {e}")
         st.stop()
