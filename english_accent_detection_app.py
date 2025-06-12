@@ -53,6 +53,7 @@ def extract_audio(video_path):
 def load_accent_model():
     import torch
     import torchaudio
+    st.write("PyTorch and Streamlit are working together!")
     from speechbrain.pretrained.interfaces import foreign_class
     classifier = foreign_class(
         source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
