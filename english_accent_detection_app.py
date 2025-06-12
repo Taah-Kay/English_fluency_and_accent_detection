@@ -50,6 +50,7 @@ def extract_audio(video_path):
 #Load model and predict accent
 # -----------------------
 @st.cache_resource
+classifier = load_accent_model()
 def load_accent_model():
     import torchaudio
     st.write("PyTorch and Streamlit are working together!")
@@ -60,22 +61,26 @@ def load_accent_model():
             pymodule_file="custom_interface.py",
             classname="CustomEncoderWav2vec2Classifier"
         )
+        st.success("Model loaded successfully.")
     except Exception as e:
         st.error(f"Error during model loading from Hugging face: {e}")
         st.stop()  
-    st.success("Model loaded successfully.")
+    
     return classifier
 
-def analyze_accent(audio_path):
-    classifier = load_accent_model()
+def analyze_accent(audio_path, classifier):
+    
     try:
         out_prob, score, index, label = classifier.classify_file(audio_path)
         score = round(score[0].item() * 100, 2)  # Return score as percentage
+        return label, score
+        st.success("classified successfully.")
+        
     except Exception as e:
         st.error(f"Error during accent accent classification: {e}")
         st.stop()
-    st.success("classified successfully.")
-    return label, score
+    
+    
 
 # Streamlit UI
 st.title("🎙️ English Accent Audio Detector")
@@ -116,7 +121,7 @@ if video_path:
              # Analyze the audio
             st.info("Analyzing accent...")
             try:
-                accent, confidence = analyze_accent(audio_path)  # get the predicted accent and confidence score from the model
+                accent, confidence = analyze_accent(audio_path,classifier)  # get the predicted accent and confidence score from the model
             except Exception as e:
                 st.error(f"Error during accent analysis: {e}")
                 st.stop()
