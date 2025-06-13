@@ -228,7 +228,7 @@ def main():
                         try:
                             waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
                             st.success("Sucessfully created a waveform!")
-                            accent, confidence = classify_accent(waveform, sample_rate) #Parse the processed audio to the model
+                            accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
 
 
                             # Display results
