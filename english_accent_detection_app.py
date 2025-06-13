@@ -98,6 +98,9 @@ def load_accent_model():
             pymodule_file="custom_interface.py",
             classname="CustomEncoderWav2vec2Classifier"
         )
+        st.write(f"Model class: {classifier.__class__}")
+        st.write(f"Module: {classifier.__class__.__module__}")
+
         st.success("✅ Model loaded successfully.")
         return classifier
     except Exception as e:
