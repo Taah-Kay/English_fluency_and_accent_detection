@@ -17,7 +17,7 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
     ```
 
     Example
-    -------
+    ------
     >>> import torchaudio
     >>> from speechbrain.pretrained import EncoderClassifier
     >>> # Model is downloaded from the speechbrain HuggingFace repo
