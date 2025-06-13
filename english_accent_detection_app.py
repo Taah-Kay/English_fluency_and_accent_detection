@@ -3,7 +3,6 @@ from moviepy.editor import VideoFileClip
 import requests
 import tempfile
 import subprocess
-from pytube import YouTube
 from transformers import pipeline
 from huggingface_hub import login
 import os
@@ -32,7 +31,7 @@ def download_video_from_url(url):
         return None
 
 def download_social_video(url):
-    """Download 240p video from YouTube or TikTok using yt-dlp.""" # we are more interested in the audio not picture quality ***Memory management
+    """Download 240p video from YouTube yt-dlp.""" # we are more interested in the audio not picture quality ***Memory management
     try:
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
         command = [
