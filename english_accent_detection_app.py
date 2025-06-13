@@ -241,7 +241,7 @@ def main():
 
 
                     
-                        except Exception as e:
+                         except Exception as e:
                             st.error(f"❌ Error during accent analysis: {e}")
                             st.stop()
 
