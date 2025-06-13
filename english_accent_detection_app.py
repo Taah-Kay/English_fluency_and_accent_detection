@@ -165,7 +165,7 @@ def main():
 
     # Load model only once
     classifier = load_accent_model()
-    whisper_pipe = load_whisper()
+    # whisper_pipe = load_whisper()
 
     # Input selection
     option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube link"])
@@ -205,6 +205,7 @@ def main():
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
 
+                """ Removed languaage filter because of streamlit memory restrictions
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
                     whisper_result = whisper_pipe(audio_path, return_language=True)
@@ -212,9 +213,9 @@ def main():
 
                 except Exception as e:
                             st.error(f"❌ Error filtering audio: {e}")
-                            st.stop()
+                            st.stop()"""
 
-
+                lang = "en"    
                 if lang is None or lang.lower() not in ["en", "english"]:
                         os.remove(video_path)
                         os.remove(audio_path)
@@ -236,7 +237,7 @@ def main():
                             st.write(f"🧠 Confidence Score: **{confidence}%**")
 
                             # Step 3: Show transcription for audio
-                            st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
+                            #st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
 
 
                     
