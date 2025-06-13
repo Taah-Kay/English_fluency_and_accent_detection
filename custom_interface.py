@@ -1,3 +1,4 @@
+
 import torch
 from speechbrain.pretrained import Pretrained
 
@@ -5,19 +6,16 @@ from speechbrain.pretrained import Pretrained
 class CustomEncoderWav2vec2Classifier(Pretrained):
     """A ready-to-use class for utterance-level classification (e.g, speaker-id,
     language-id, emotion recognition, keyword spotting, etc).
-
     The class assumes that an self-supervised encoder like wav2vec2/hubert and a classifier model
     are defined in the yaml file. If you want to
     convert the predicted index into a corresponding text label, please
     provide the path of the label_encoder in a variable called 'lab_encoder_file'
     within the yaml.
-
     The class can be used either to run only the encoder (encode_batch()) to
     extract embeddings or to run a classification step (classify_batch()).
     ```
-
     Example
-    ------
+    -------
     >>> import torchaudio
     >>> from speechbrain.pretrained import EncoderClassifier
     >>> # Model is downloaded from the speechbrain HuggingFace repo
@@ -26,11 +24,9 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
     ...     source="speechbrain/spkrec-ecapa-voxceleb",
     ...     savedir=tmpdir,
     ... )
-
     >>> # Compute embeddings
     >>> signal, fs = torchaudio.load("samples/audio_samples/example1.wav")
     >>> embeddings =  classifier.encode_batch(signal)
-
     >>> # Classification
     >>> prediction =  classifier .classify_batch(signal)
     """
@@ -40,12 +36,10 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
 
     def encode_batch(self, wavs, wav_lens=None, normalize=False):
         """Encodes the input audio into a single vector embedding.
-
         The waveforms should already be in the model's desired format.
         You can call:
         ``normalized = <this>.normalizer(signal, sample_rate)``
         to get a correctly converted signal in most cases.
-
         Arguments
         ---------
         wavs : torch.tensor
@@ -59,7 +53,6 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
         normalize : bool
             If True, it normalizes the embeddings with the statistics
             contained in mean_var_norm_emb.
-
         Returns
         -------
         torch.tensor
@@ -87,10 +80,8 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
 
     def classify_batch(self, wavs, wav_lens=None):
         """Performs classification on the top of the encoded features.
-
         It returns the posterior probabilities, the index and, if the label
         encoder is specified it also the text label.
-
         Arguments
         ---------
         wavs : torch.tensor
@@ -101,7 +92,6 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
             batch, tensor of shape [batch]. The longest one should have
             relative length 1.0 and others len(waveform) / max_length.
             Used for ignoring padding.
-
         Returns
         -------
         out_prob
@@ -123,12 +113,10 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
 
     def classify_file(self, path):
         """Classifies the given audiofile into the given set of labels.
-
         Arguments
         ---------
         path : str
             Path to audio file to classify.
-
         Returns
         -------
         out_prob
@@ -141,23 +129,18 @@ class CustomEncoderWav2vec2Classifier(Pretrained):
             List with the text labels corresponding to the indexes.
             (label encoder should be provided).
         """
-        try:
-            waveform = self.load_audio(path)
-            # Fake a batch:
-            batch = waveform.unsqueeze(0)
-            rel_length = torch.tensor([1.0])
-            outputs = self.encode_batch(batch, rel_length)
-            outputs = self.mods.output_mlp(outputs)
-            #outputs = self.mods.output_mlp(outputs).squeeze(1) potential to break the app
-            out_prob = self.hparams.softmax(outputs)
-            score, index = torch.max(out_prob, dim=-1)
-            text_lab = self.hparams.label_encoder.decode_torch(index)
-            return out_prob, score, index, text_lab
-        except Exception as e:
-            print(f"[ERROR] classify_file failed: {e}")
-            raise
+        waveform = self.load_audio(path)
+        # Fake a batch:
+        batch = waveform.unsqueeze(0)
+        rel_length = torch.tensor([1.0])
+        outputs = self.encode_batch(batch, rel_length)
+        outputs = self.mods.output_mlp(outputs).squeeze(1)
+        out_prob = self.hparams.softmax(outputs)
+        score, index = torch.max(out_prob, dim=-1)
+        text_lab = self.hparams.label_encoder.decode_torch(index)
+        return out_prob, score, index, text_lab
 
     def forward(self, wavs, wav_lens=None, normalize=False):
         return self.encode_batch(
             wavs=wavs, wav_lens=wav_lens, normalize=normalize
-        )
+        ) 
