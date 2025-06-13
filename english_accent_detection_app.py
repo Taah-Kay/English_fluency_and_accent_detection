@@ -167,7 +167,7 @@ def main():
     if 'audio_path' not in st.session_state:
         st.session_state.audio_ready = False
 
-     if 'audio_path' not in st.session_state:
+    if 'audio_path' not in st.session_state:
         st.session_state.audio_extracted = False
          
     import shutil
