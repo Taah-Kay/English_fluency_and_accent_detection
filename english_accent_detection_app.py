@@ -166,7 +166,10 @@ def main():
         st.session_state.audio_path = None
     if 'audio_path' not in st.session_state:
         st.session_state.audio_ready = False
-    
+
+     if 'audio_path' not in st.session_state:
+        st.session_state.audio_extracted = False
+         
     import shutil
     if not shutil.which("ffmpeg"):
         raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
@@ -213,13 +216,14 @@ def main():
                 st.session_state.video_path = video_path 
 
     # Process and analyze video
-    if st.session_state.video_path and audio_path! =None:
+    if st.session_state.video_path and st.session_state.audio_extracted == False :   
         if st.button("Extract Audio"):
             st.success(st.session_state.audio_path)
         
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
+            st.session_state.audio_extracted = True
             
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
