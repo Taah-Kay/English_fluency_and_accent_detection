@@ -169,7 +169,7 @@ def main():
     
     import shutil
     if not shutil.which("ffmpeg"):
-        raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")1
+        raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
 
         
     st.title("🎙️ English Accent Audio Detector")
