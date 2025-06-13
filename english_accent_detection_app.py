@@ -226,6 +226,7 @@ def main():
                 # Perform accent analysis
                     if st.button("Analyze accent"):
                         try:
+                            st.success("Sucessfully created a waveform!")
                             waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
                             st.success("Sucessfully created a waveform!")
                             accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
