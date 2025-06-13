@@ -77,13 +77,14 @@ def extract_audio(video_path):
 # -------------------------------
 @st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
 def load_accent_model():
+    """
+    Loads the pre-trained accent classification model from HuggingFace.
+    """
     # Authenticate with Hugging Face to avoid 429 errors
     hf_token = os.getenv("HF_TOKEN")
     if hf_token:
         login(token=hf_token)
-    """
-    Loads the pre-trained accent classification model from HuggingFace.
-    """
+    
     login(token=os.getenv("hf_token"))
     
     st.write("🔧 Initializing PyTorch and model...")
