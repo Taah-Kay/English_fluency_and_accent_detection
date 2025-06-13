@@ -196,12 +196,14 @@ def main():
                 st.success("🎵 Audio extracted and ready for analysis!")
 
                 # Perform accent analysis
-                st.info("Analyzing accent...")
-                try:
-                    accent, confidence = analyze_accent(audio_path, classifier)
-                except Exception as e:
-                    st.error(f"❌ Error during accent analysis: {e}")
-                    st.stop()
+                if st.button("Analyze accent"):
+                    try:
+                        waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
+                        st.success("Sucessfully created a waveform!")
+                        accent, confidence = classify_accent(waveform, sample_rate) #Parse the processed audio to the model
+                    except Exception as e:
+                        st.error(f"❌ Error during accent analysis: {e}")
+                        st.stop()
 
                 # Display results
                 st.subheader("🎧 Accent Detection Result")
