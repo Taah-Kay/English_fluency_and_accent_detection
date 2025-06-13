@@ -105,15 +105,43 @@ def load_accent_model():
 # -------------------------------
 # Accent Prediction
 # -------------------------------
-def analyze_accent(audio_path, classifier):
+
+# Accent label map
+ACCENT_LABELS = {
+    "us": "American Accent",
+    "england": "British Accent",
+    "australia": "Australian Accent",
+    "indian": "Indian Accent",
+    "canada": "Canadian Accent",
+    "bermuda": "Bermudian Accent",
+    "scotland": "Scottish Accent",
+    "african": "African Accent",
+    "ireland": "Irish Accent",
+    "newzealand": "New Zealand Accent",
+    "wales": "Welsh Accent",
+    "malaysia": "Malaysian Accent",
+    "philippines": "Philippine Accent",
+    "singapore": "Singaporean Accent",
+    "hongkong": "Hong Kong Accent",
+    "southatlandtic": "South Atlantic Accent"
+}
+def analyze_accent(audio_tensor, sample_rate):
     """
     Uses the loaded model to classify the accent from the audio file.
     Returns the accent label and confidence score.
     """
     try:
-        out_prob, score, index, label = classifier.classify_file(audio_path)
-        score = round(score[0].item() * 100, 2)
-        return label, score
+        
+        if sample_rate != 16000:
+            resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
+            audio_tensor = resampler(audio_tensor)
+            
+        out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
+        accent_label = text_lab[0]
+        readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " Accent")
+        
+        return readable_accent, round(score[0].item() * 100, 2)
+    
     except Exception as e:
         st.error(f"❌ Error during accent classification: {e}")
         st.stop()
