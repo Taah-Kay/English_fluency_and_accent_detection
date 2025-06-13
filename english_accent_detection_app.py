@@ -164,9 +164,10 @@ def main():
         st.session_state.video_path = None
     if 'audio_path' not in st.session_state:
         st.session_state.audio_path = None
-    if 'audio_path' not in st.session_state:
+    if 'audio_ready' not in st.session_state:
         st.session_state.audio_ready = False
-        st.session_state.audio_extract = False 
+    if 'audio_extract' not in st.session_state: 
+    st.session_state.audio_extract = False 
 
   
          
