@@ -3,6 +3,7 @@ from moviepy.editor import VideoFileClip
 import requests
 import tempfile
 import subprocess
+import torchaudio
 from transformers import pipeline
 from huggingface_hub import login
 import os
@@ -203,18 +204,24 @@ def main():
             audio_path = extract_audio(video_path)
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
-                
+
+                try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-                whisper_result = whisper_pipe(audio_path, return_language=True)
-                lang = whisper_result.get('chunks', [{}])[0].get('language', None)
+                    whisper_result = whisper_pipe(audio_path, return_language=True)
+                    lang = whisper_result.get('chunks', [{}])[0].get('language', None)
+
+                except Exception as e:
+                            st.error(f"❌ Error filtering audio: {e}")
+                            st.stop()
+
 
                 if lang is None or lang.lower() not in ["en", "english"]:
-                    os.remove(video_path)
-                    os.remove(audio_path)
-                    st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
+                        os.remove(video_path)
+                        os.remove(audio_path)
+                        st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
                 else:
                     st.success("🎵 Audio extracted and ready for analysis!")
-
+                
                 # Perform accent analysis
                     if st.button("Analyze accent"):
                         try:
@@ -231,9 +238,6 @@ def main():
                             # Step 3: Show transcription for audio
                             st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
 
-                            # Clean up temp files
-                            os.remove(video_path)
-                            os.remove(audio_path)
 
                     
                         except Exception as e:
