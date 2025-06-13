@@ -143,6 +143,7 @@ def analyze_accent(audio_tensor, sample_rate, classifier):
             audio_tensor = resampler(audio_tensor)
             
         out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
+        st.success("done Classifying") 
         accent_label = text_lab[0]
         readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
         
