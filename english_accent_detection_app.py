@@ -220,7 +220,7 @@ def main():
     if st.session_state.video_path and not st.session_state.audio_extract:   
         if st.button("Extract Audio"):
             st.success(st.session_state.audio_path)
-        
+    
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
@@ -249,29 +249,30 @@ def main():
                 
                 # Perform accent analysis
                  
-         if st.session_state.audio_ready and st.session_state.audio_path:   
-                if st.button("Analyze accent"):
-                    try:
-                       with st.spinner("Analyzing accent..."):
-                            st.success("Sucessfully created a waveform!")
-                            waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
-                            st.success("Sucessfully created a waveform!")
-                            accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
+    if st.session_state.audio_ready and st.session_state.audio_path:   
+        if st.button("Analyze accent"):
+            try:
+                with st.spinner("Analyzing accent..."):
+                         
+                    st.success("Sucessfully created a waveform!")
+                    waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
+                    st.success("Sucessfully created a waveform!")
+                    accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
 
 
                             # Display results
-                        st.subheader("🎧 Accent Detection Result")
-                        st.write(f"The speaker in the video has a ", accent)
-                        st.write(f"🧠 Confidence Score: **{confidence}%**")
+                st.subheader("🎧 Accent Detection Result")
+                st.write(f"The speaker in the video has a ", accent)
+                st.write(f"🧠 Confidence Score: **{confidence}%**")
 
                             # Step 3: Show transcription for audio
                             #st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
 
 
                     
-                    except Exception as e:
-                        st.error(f"❌ Error during accent analysis: {e}")
-                        st.stop()
+            except Exception as e:
+                st.error(f"❌ Error during accent analysis: {e}")
+                st.stop()
 
                     
 
