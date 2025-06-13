@@ -143,7 +143,7 @@ def analyze_accent(audio_tensor, sample_rate):
             
         out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         accent_label = text_lab[0]
-        readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " Accent")
+        readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
         
         return readable_accent, round(score[0].item() * 100, 2)
     
@@ -163,7 +163,7 @@ def main():
     whisper_pipe = load_whisper()
 
     # Input selection
-    option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube or Tiktok link"])
+    option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube link"])
     video_path = None
 
     # File uploader option
@@ -186,8 +186,8 @@ def main():
 
      
       #YouTube and TikTok video downloads
-    elif option == "Enter YouTube or Tiktok link":
-        yt_url = st.text_input("Paste YouTube/TikTok link")
+    elif option == "Enter YouTube link":
+        yt_url = st.text_input("Paste YouTube")
         if st.button("Download from Social Media"):
             video_path = download_social_video(yt_url)
             if video_path:
@@ -217,22 +217,26 @@ def main():
                             waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
                             st.success("Sucessfully created a waveform!")
                             accent, confidence = classify_accent(waveform, sample_rate) #Parse the processed audio to the model
+
+
+                            # Display results
+                            st.subheader("🎧 Accent Detection Result")
+                            st.write(f"The speaker in the video has a ", accent)
+                            st.write(f"🧠 Confidence Score: **{confidence}%**")
+
+                            # Step 3: Show transcription for audio
+                            st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
+
+                            # Clean up temp files
+                            os.remove(video_path)
+                            os.remove(audio_path)
+
+                    
                         except Exception as e:
                             st.error(f"❌ Error during accent analysis: {e}")
                             st.stop()
 
-                    # Display results
-                    st.subheader("🎧 Accent Detection Result")
-                    st.write(f"The speaker in the video has a **{accent}** accent.")
-                    st.write(f"🧠 Confidence Score: **{confidence}%**")
-
-                    # Provide interpretation of confidence score
-                    if confidence > 85:
-                        st.success("✅ High confidence in prediction.")
-                    elif confidence > 60:
-                        st.info("ℹ️ Moderate confidence. Might be some accent overlap.")
-                    else:
-                        st.warning("⚠️ Low confidence. Try using a clearer audio sample.")
+                    
 
 
 # Run the app
