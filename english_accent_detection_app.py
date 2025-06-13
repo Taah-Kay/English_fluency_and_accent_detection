@@ -213,7 +213,7 @@ def main():
                 st.session_state.video_path = video_path 
 
     # Process and analyze video
-    if st.session_state.video_path:
+    if st.session_state.video_path and audio_path! =None:
         if st.button("Extract Audio"):
             st.success(st.session_state.audio_path)
         
