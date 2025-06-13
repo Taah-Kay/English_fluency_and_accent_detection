@@ -168,7 +168,9 @@ def main():
         st.session_state.audio_ready = False
     if 'audio_extract' not in st.session_state: 
         st.session_state.audio_extract = "" 
-
+    if 'classifier' not in st.session_state: 
+        st.session_state.classifier= None 
+    
   
          
     import shutil
@@ -179,7 +181,7 @@ def main():
     st.title("🎙️ English Accent Audio Detector")
 
     # Load model only once
-    classifier = load_accent_model()
+    st.session_state.classifier =  load_accent_model()
     # whisper_pipe = load_whisper()
 
     # Input selection
