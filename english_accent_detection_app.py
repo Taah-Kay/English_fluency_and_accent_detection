@@ -3,6 +3,8 @@ from moviepy.editor import VideoFileClip
 import requests
 import tempfile
 import subprocess
+from pytube import YouTube
+from transformers import pipeline
 from huggingface_hub import login
 import os
 
@@ -101,7 +103,10 @@ def load_accent_model():
         st.error(f"❌ Error loading model: {e}")
         st.stop()
 
-
+# Load Whisper model (tiny version for speed)
+@st.cache_resource
+def load_whisper():
+    return pipeline("automatic-speech-recognition", model="openai/whisper-tiny", device="cpu")
 # -------------------------------
 # Accent Prediction
 # -------------------------------
@@ -155,6 +160,7 @@ def main():
 
     # Load model only once
     classifier = load_accent_model()
+    whisper_pipe = load_whisper()
 
     # Input selection
     option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube or Tiktok link"])
@@ -193,30 +199,40 @@ def main():
             audio_path = extract_audio(video_path)
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
-                st.success("🎵 Audio extracted and ready for analysis!")
+                
+                # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
+                whisper_result = whisper_pipe(audio_path, return_language=True)
+                lang = whisper_result.get('chunks', [{}])[0].get('language', None)
+
+                if lang is None or lang.lower() not in ["en", "english"]:
+                    os.remove(video_path)
+                    os.remove(audio_path)
+                    st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
+                else:
+                    st.success("🎵 Audio extracted and ready for analysis!")
 
                 # Perform accent analysis
-                if st.button("Analyze accent"):
-                    try:
-                        waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
-                        st.success("Sucessfully created a waveform!")
-                        accent, confidence = classify_accent(waveform, sample_rate) #Parse the processed audio to the model
-                    except Exception as e:
-                        st.error(f"❌ Error during accent analysis: {e}")
-                        st.stop()
+                    if st.button("Analyze accent"):
+                        try:
+                            waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
+                            st.success("Sucessfully created a waveform!")
+                            accent, confidence = classify_accent(waveform, sample_rate) #Parse the processed audio to the model
+                        except Exception as e:
+                            st.error(f"❌ Error during accent analysis: {e}")
+                            st.stop()
 
-                # Display results
-                st.subheader("🎧 Accent Detection Result")
-                st.write(f"The speaker in the video has a **{accent}** accent.")
-                st.write(f"🧠 Confidence Score: **{confidence}%**")
+                    # Display results
+                    st.subheader("🎧 Accent Detection Result")
+                    st.write(f"The speaker in the video has a **{accent}** accent.")
+                    st.write(f"🧠 Confidence Score: **{confidence}%**")
 
-                # Provide interpretation of confidence score
-                if confidence > 85:
-                    st.success("✅ High confidence in prediction.")
-                elif confidence > 60:
-                    st.info("ℹ️ Moderate confidence. Might be some accent overlap.")
-                else:
-                    st.warning("⚠️ Low confidence. Try using a clearer audio sample.")
+                    # Provide interpretation of confidence score
+                    if confidence > 85:
+                        st.success("✅ High confidence in prediction.")
+                    elif confidence > 60:
+                        st.info("ℹ️ Moderate confidence. Might be some accent overlap.")
+                    else:
+                        st.warning("⚠️ Low confidence. Try using a clearer audio sample.")
 
 
 # Run the app
