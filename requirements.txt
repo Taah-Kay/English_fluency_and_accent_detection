@@ -1,5 +1,6 @@
 streamlit
 moviepy
+ffmpeg-python
 requests
 speechbrain==0.5.14
 faster-whisper
