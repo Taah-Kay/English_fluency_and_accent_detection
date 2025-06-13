@@ -161,6 +161,15 @@ def main():
     if not shutil.which("ffmpeg"):
         raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
         
+    # Setting session state for variables reset after button clicks
+    if "video_path" not in st.session_state:
+        st.session_state.video_path = None
+    if "audio_path" not in st.session_state:
+        st.session_state.audio_path = None
+    if "audio_ready" not in st.session_state:
+        st.session_state.audio_ready = False
+
+        
     st.title("🎙️ English Accent Audio Detector")
 
     # Load model only once
@@ -180,6 +189,7 @@ def main():
                 f.write(uploaded_video.read())
             video_path = temp_video_path.name
             st.success("✅ Video uploaded successfully.")
+            st.session_state.video_path = video_path 
 
     # Direct URL input option
     elif option == "Enter direct MP4 URL":
@@ -188,6 +198,7 @@ def main():
             video_path = download_video_from_url(video_url)
             if video_path:
                 st.success("✅ Video downloaded successfully.")
+                st.session_state.video_path = video_path 
 
      
       #YouTube and TikTok video downloads
@@ -197,11 +208,16 @@ def main():
             video_path = download_social_video(yt_url)
             if video_path:
                 st.success("Video downloaded from social media.")
+                st.session_state.video_path = video_path 
 
     # Process and analyze video
-    if video_path:
+    if st.session_state.video_path:
         if st.button("Extract Audio"):
-            audio_path = extract_audio(video_path)
+            
+            audio_path = extract_audio(video_path)   
+            st.session_state.audio_path = audio_path
+            st.session_state.audio_ready = True
+            
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
 
@@ -224,6 +240,8 @@ def main():
                     st.success("🎵 Audio extracted and ready for analysis!")
                 
                 # Perform accent analysis
+                 
+                if st.session_state.audio_ready and st.session_state.audio_path:   
                     if st.button("Analyze accent"):
                         try:
                             st.success("Sucessfully created a waveform!")
