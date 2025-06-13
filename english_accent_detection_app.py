@@ -2,9 +2,10 @@ import streamlit as st
 from moviepy.editor import VideoFileClip  
 import requests
 import tempfile
-
+import subprocess
 from huggingface_hub import login
 import os
+
 # -------------------------------
 # Utility Function: Download Video
 # -------------------------------
@@ -26,6 +27,25 @@ def download_video_from_url(url):
             return None
     except Exception as e:
         st.error(f"❌ Error downloading video: {e}")
+        return None
+
+def download_social_video(url):
+    """Download 240p video from YouTube or TikTok using yt-dlp.""" # we are more interested in the audio not picture quality ***Memory management
+    try:
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+        command = [
+            "yt-dlp",
+            "-f", "bestvideo[height<=240]+bestaudio/best[height<=240]",
+            "-o", temp_file.name,
+            url
+        ]
+        subprocess.run(command, check=True)
+        return temp_file.name
+    except subprocess.CalledProcessError as e:
+        st.error("Download failed. The URL may be invalid or unsupported.")
+        return None
+    except Exception as e:
+        st.error(f"Unexpected error: {e}")
         return None
 
 
@@ -122,13 +142,22 @@ def main():
             video_path = temp_video_path.name
             st.success("✅ Video uploaded successfully.")
 
-    # URL input option
+    # Direct URL input option
     elif option == "Enter direct MP4 URL":
         video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
         if st.button("Download Video"):
             video_path = download_video_from_url(video_url)
             if video_path:
                 st.success("✅ Video downloaded successfully.")
+
+     
+      #YouTube and TikTok video downloads
+    elif option == "YouTube or TikTok link":
+        yt_url = st.text_input("Paste YouTube/TikTok link")
+        if st.button("Download from Social Media"):
+            video_path = download_social_video(yt_url)
+            if video_path:
+                st.success("Video downloaded from social media.")
 
     # Process and analyze video
     if video_path:
