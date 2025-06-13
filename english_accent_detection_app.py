@@ -162,12 +162,10 @@ def main():
         raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
         
     # Setting session state for variables reset after button clicks
-    if "video_path" not in st.session_state:
-        st.session_state.video_path = None
-    if "audio_path" not in st.session_state:
-        st.session_state.audio_path = None
-    if "audio_ready" not in st.session_state:
-        st.session_state.audio_ready = False
+   
+    st.session_state.video_path = None
+    st.session_state.audio_path = None
+    st.session_state.audio_ready = False
 
         
     st.title("🎙️ English Accent Audio Detector")
