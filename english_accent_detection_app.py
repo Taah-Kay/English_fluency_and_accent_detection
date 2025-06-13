@@ -256,6 +256,11 @@ def main():
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
             try:
+                if classifier! = None:
+                    st.success("Classifier still exist")
+
+                else:
+                    st.error("Classifier failed") 
                 with st.spinner("Analyzing accent..."):
                          
                     st.success("Sucessfully created a waveform!")
