@@ -129,7 +129,7 @@ def main():
     classifier = load_accent_model()
 
     # Input selection
-    option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL"])
+    option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube or Tiktok link"])
     video_path = None
 
     # File uploader option
