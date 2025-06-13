@@ -253,9 +253,8 @@ def main():
                     if st.button("Analyze accent"):
                         try:
                             with st.spinner("Analyzing accent..."):
-                                audio_path = session_state.audio_path
                                 st.success("Sucessfully created a waveform!")
-                                waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
+                                waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
                                 st.success("Sucessfully created a waveform!")
                                 accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
 
