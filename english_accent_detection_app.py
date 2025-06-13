@@ -224,7 +224,7 @@ def main():
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
-            st.session_state.audio_extracted = True
+            st.session_state.audio_extract = True
             
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
