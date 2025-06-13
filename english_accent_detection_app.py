@@ -213,7 +213,7 @@ def main():
     # Process and analyze video
     if st.session_state.video_path:
         if st.button("Extract Audio"):
-            
+        
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
@@ -244,6 +244,7 @@ def main():
                 if st.session_state.audio_ready and st.session_state.audio_path:   
                     if st.button("Analyze accent"):
                         try:
+                            audio_path = session_state.audio_path
                             st.success("Sucessfully created a waveform!")
                             waveform, sample_rate = torchaudio.load(audio_path) # Process the audio for model inference
                             st.success("Sucessfully created a waveform!")
