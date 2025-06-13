@@ -157,15 +157,19 @@ def analyze_accent(audio_tensor, sample_rate):
 # Main Streamlit App
 # -------------------------------
 def main():
-    import shutil
-    if not shutil.which("ffmpeg"):
-        raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
+    
         
     # Setting session state for variables reset after button clicks
-   
-    st.session_state.video_path = None
-    st.session_state.audio_path = None
-    st.session_state.audio_ready = False
+    if 'video_path' not in st.session_state:
+        st.session_state.video_path = None
+    if 'audio_path' not in st.session_state:
+        st.session_state.audio_path = None
+    if 'audio_path' not in st.session_state:
+        st.session_state.audio_ready = False
+    
+    import shutil
+    if not shutil.which("ffmpeg"):
+        raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")1
 
         
     st.title("🎙️ English Accent Audio Detector")
