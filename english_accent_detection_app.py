@@ -256,7 +256,7 @@ def main():
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
             try:
-                if classifier not None:
+                if classifier is not None:
                     st.success("Classifier still exist")
 
                 else:
