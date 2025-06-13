@@ -166,9 +166,9 @@ def main():
         st.session_state.audio_path = None
     if 'audio_path' not in st.session_state:
         st.session_state.audio_ready = False
+        st.session_state.audio_extract = False 
 
-    if 'audio_path' not in st.session_state:
-        st.session_state.audio_extracted = False
+  
          
     import shutil
     if not shutil.which("ffmpeg"):
@@ -216,7 +216,7 @@ def main():
                 st.session_state.video_path = video_path 
 
     # Process and analyze video
-    if st.session_state.video_path and not st.session_state.audio_extracted:   
+    if st.session_state.video_path and not st.session_state.audio_extract:   
         if st.button("Extract Audio"):
             st.success(st.session_state.audio_path)
         
