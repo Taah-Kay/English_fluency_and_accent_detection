@@ -167,7 +167,7 @@ def main():
     if 'audio_ready' not in st.session_state:
         st.session_state.audio_ready = False
     if 'audio_extract' not in st.session_state: 
-        st.session_state.audio_extract = False 
+        st.session_state.audio_extract = "" 
 
   
          
@@ -224,7 +224,7 @@ def main():
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
-            st.session_state.audio_extract = True
+            st.session_state.audio_extract = "extracted" 
             
             if audio_path:
                 st.audio(audio_path, format='audio/wav')
