@@ -211,6 +211,7 @@ def main():
     # Process and analyze video
     if st.session_state.video_path and not (st.session_state.audio_path) :
         if st.button("Extract Audio"):
+            st.success(st.session_state.audio_path)
         
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
