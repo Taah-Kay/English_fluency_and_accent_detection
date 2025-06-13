@@ -155,7 +155,10 @@ def analyze_accent(audio_tensor, sample_rate):
 # Main Streamlit App
 # -------------------------------
 def main():
-    st.title("🎙️ English Accent Audio Detector")
+    import shutil
+    if not shutil.which("ffmpeg"):
+        raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
+            st.title("🎙️ English Accent Audio Detector")
 
     # Load model only once
     classifier = load_accent_model()
