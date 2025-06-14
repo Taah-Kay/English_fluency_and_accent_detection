@@ -206,7 +206,7 @@ def main():
     st.title("🎙️ English Accent Audio Detector")
 
     # Load model only once
-    classifier =  load_accent_model()
+    st.session_state.classifier =  load_accent_model()
     # whisper_pipe = load_whisper()
 
     # Input selection
@@ -290,7 +290,7 @@ def main():
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
                     st.success(waveform.shape)
                     
-                    accent, confidence = analyze_accent(waveform, sample_rate, classifier) #Parse the processed audio to the model
+                    accent, confidence = analyze_accent(waveform, sample_rate, st.session_state.classifier) #Parse the processed audio to the model
 
 
                             # Display results
