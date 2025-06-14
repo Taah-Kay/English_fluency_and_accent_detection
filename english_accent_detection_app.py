@@ -4,8 +4,6 @@ from moviepy.editor import VideoFileClip
 import requests
 import tempfile
 import subprocess
-import custom_interface
-from custom_interface import CustomEncoderWav2vec2Classifier
 import torchaudio
 #from transformers import pipeline
 from huggingface_hub import login
