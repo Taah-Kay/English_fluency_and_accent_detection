@@ -186,19 +186,22 @@ def analyze_accent(audio_tensor, sample_rate, model):
         device = torch.device("cpu")  # or "cuda" if using GPU
         audio_tensor = audio_tensor.to(device)
         
+        mem = psutil.virtual_memory()
+        st.write(f"🔍 Memory used: {mem.percent}%")
+        
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
            
         with torch.no_grad():  
             
-            display_memory_once()
+            
             out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
             accent_label = text_lab[0]
             readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
             
-        display_memory_once()
+        
         
         return readable_accent, round(score[0].item() * 100, 2)
     
