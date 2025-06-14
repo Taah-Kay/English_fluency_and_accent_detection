@@ -176,8 +176,8 @@ def analyze_accent(audio_tensor, sample_rate, model):
         
         #return readable_accent, round(score[0].item() * 100, 2)
         st.write("Got classifier:", classifier)
-        st.writ("Waveform shape:", audio_tensor.shape)
-        st.writ("Sample rate:", sample_rate)
+        st.write("Waveform shape:", audio_tensor.shape)
+        st.write("Sample rate:", sample_rate)
         return "Testing", 99.9
 
         
