@@ -196,8 +196,11 @@ def main():
         st.session_state.audio_ready = False
     if 'audio_extract' not in st.session_state: 
         st.session_state.audio_extract = "" 
+
+    # Load model only once
+    
     if 'classifier' not in st.session_state: 
-        st.session_state.classifier= None 
+        st.session_state.classifier =  load_accent_model()
     
   
          
@@ -208,9 +211,8 @@ def main():
         
     st.title("🎙️ English Accent Audio Detector")
 
-    # Load model only once
-    st.session_state.classifier =  load_accent_model()
-    # whisper_pipe = load_whisper()
+    
+    
 
     # Input selection
     option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube link"])
