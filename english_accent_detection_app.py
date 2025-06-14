@@ -77,7 +77,7 @@ def extract_audio(video_path):
 # -------------------------------
 # Load Model (Cached)
 # -------------------------------
-@st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
+#@st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
 def load_accent_model():
     """
     Loads the pre-trained accent classification model from HuggingFace.
