@@ -145,14 +145,14 @@ def analyze_accent(audio_tensor, sample_rate, model):
     sample_rate = sample_rate
     st.write(f"Model class: {classifier.__class__}")
     st.write(f"Module: {classifier.__class__.__module__}")
-    st.success("Starting Classification ") 
+     
     try:
         
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
               
-        
+        st.success("Starting Classification ")
         out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
         accent_label = text_lab[0]
@@ -275,7 +275,7 @@ def main():
                          
                     st.success("Sucessfully created a waveform!")
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
-                    st.success("Sucessfully created a waveform!")
+                    st.success(waveform.shape)
                     
                     accent, confidence = analyze_accent(waveform, sample_rate, classifier) #Parse the processed audio to the model
 
