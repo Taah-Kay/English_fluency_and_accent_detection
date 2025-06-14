@@ -206,7 +206,11 @@ def main():
     
     if 'classifier' not in st.session_state: 
         st.session_state.classifier =  load_accent_model()
-    
+        
+    # Assessing memory use
+    import psutil
+    mem = psutil.virtual_memory()
+    st.write(f"🔍 Memory used: {mem.percent}%")
   
          
     import shutil
