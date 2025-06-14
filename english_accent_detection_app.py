@@ -280,7 +280,7 @@ def main():
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
             try:
-                if classifier is not None:
+                if st.session_state.classifier is not None:
                     st.success("Classifier still exist")
 
                 else:
@@ -289,7 +289,7 @@ def main():
                          
                     st.success("Sucessfully created a waveform!")
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
-                    st.success(waveform.shape)
+                    st.success(st.session_state.classifier)
                     
                     accent, confidence = analyze_accent(waveform, sample_rate, st.session_state.classifier) #Parse the processed audio to the model
 
