@@ -1,6 +1,8 @@
 
 import importlib
 import sys
+import os
+
 # Load custom class at startup
 module_name = "custom_interface"
 module_path = os.path.abspath("custom_interface.py")
@@ -22,7 +24,6 @@ import subprocess
 import torchaudio
 #from transformers import pipeline
 from huggingface_hub import login
-import os
 
 
 
