@@ -182,11 +182,9 @@ def analyze_accent(audio_tensor, sample_rate, model):
 
         # Add batch dimension to get [1, time]
         audio_tensor = audio_tensor.unsqueeze(0).to(torch.float32) 
-        st.write(audio_tensor.shape)
+        
         device = torch.device("cpu")  # or "cuda" if using GPU
         audio_tensor = audio_tensor.to(device)
-        
-        
         
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
@@ -203,12 +201,6 @@ def analyze_accent(audio_tensor, sample_rate, model):
         display_memory_once()
         
         return readable_accent, round(score[0].item() * 100, 2)
-    
-        
-
-        
-   
-        return None, None
     
     except Exception as e:
         import traceback
