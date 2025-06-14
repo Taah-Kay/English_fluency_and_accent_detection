@@ -141,6 +141,8 @@ def analyze_accent(audio_tensor, sample_rate, model):
     Returns the accent label and confidence score.
     """
     classifier = model
+    audio_tensor = audio_tensor
+    sample_rate = sample_rate
     st.write(f"Model class: {classifier.__class__}")
     st.write(f"Module: {classifier.__class__.__module__}")
     st.success("Starting Classification ") 
@@ -158,7 +160,7 @@ def analyze_accent(audio_tensor, sample_rate, model):
         
         return readable_accent, round(score[0].item() * 100, 2)
     
-     except Exception as e:
+      except Exception as e:
         st.error(f"❌ Error during accent classification: {e}")
         st.stop()
 
