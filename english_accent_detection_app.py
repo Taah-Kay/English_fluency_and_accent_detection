@@ -168,13 +168,17 @@ def analyze_accent(audio_tensor, sample_rate, model):
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
               
-        st.success("Starting Classification ")
-        out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
+        #st.success("Starting Classification ")
+        #out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
-        accent_label = text_lab[0]
-        readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
+        #accent_label = text_lab[0]
+        #readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
         
-        return readable_accent, round(score[0].item() * 100, 2)
+        #return readable_accent, round(score[0].item() * 100, 2)
+        st.success("Classifier object exists. Skipping actual inference for now.")
+        return "Mock Accent", 99.9
+
+    
     
     except Exception as e:
         st.error(f"❌ Error during accent classification: {e}")
