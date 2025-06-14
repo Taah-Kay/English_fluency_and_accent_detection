@@ -242,7 +242,7 @@ def main():
 
     if st.button("🔄 Analyze new video"):
         reset_session_state_except_model()
-        st.experimental_rerun()
+        st.rerun()
 
 
   
