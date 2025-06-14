@@ -112,13 +112,7 @@ def load_accent_model():
     """
     Loads the pre-trained accent classification model from HuggingFace.
     """
-    # Authenticate with Hugging Face to avoid 429 errors
-    try:
-        login(token= os.getenv("HF_TOKEN") or os.getenv("hf_token"))
-        
-    except Exception as e:
-                st.error(f"❌ ⚠️ Hugging Face token not found in environment variables: {e}")
-                st.stop()
+
     st.write("🔧 Initializing PyTorch and model...")
 
     try:
