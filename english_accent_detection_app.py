@@ -11,8 +11,8 @@ import torch
 from speechbrain.pretrained.interfaces import foreign_class
 #from transformers import pipeline
 from huggingface_hub import login
-
-
+import psutil
+import traceback
 
 
 # -------------------------------
@@ -79,7 +79,7 @@ def extract_audio(video_path):
         st.error(f"❌ Error extracting audio: {e}")
         return None
 
-import psutil
+
 # --------------------------
 # Utility: Show memory once
 # --------------------------
@@ -194,19 +194,14 @@ def analyze_accent(audio_tensor, sample_rate, model):
             audio_tensor = resampler(audio_tensor)
            
         with torch.no_grad():  
-            
-            
             out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
             accent_label = text_lab[0]
             readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
-            
-        
         
         return readable_accent, round(score[0].item() * 100, 2)
     
     except Exception as e:
-        import traceback
         st.error(f"❌ Error during accent classification:\n{traceback.format_exc()}")
         return None, None
 
@@ -321,10 +316,7 @@ def main():
                  
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
-            try:
-                audio_path = extract_audio(st.session_state.video_path)
-                st.audio(st.session_state.audio_path , format='audio/wav')
-                
+            try:         
                 with st.spinner("Analyzing accent..."):
                          
                     
