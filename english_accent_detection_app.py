@@ -182,7 +182,7 @@ def analyze_accent(audio_tensor, sample_rate, model):
         return None, None
     
     except Exception as e:
-         import traceback
+        import traceback
         st.error(f"❌ Error during accent classification:\n{traceback.format_exc()}")
         return None, None
 
