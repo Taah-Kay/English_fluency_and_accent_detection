@@ -79,6 +79,31 @@ def extract_audio(video_path):
         st.error(f"❌ Error extracting audio: {e}")
         return None
 
+import psutil
+
+# --------------------------
+# Utility: Show memory once
+# --------------------------
+def display_memory_once():
+    if 'memory_logged' not in st.session_state:
+        mem = psutil.virtual_memory()
+        st.markdown(f"🧠 **Memory Used:** {mem.percent}%")
+        st.session_state.memory_logged = True
+
+# --------------------------
+# Utility: Initialize session vars
+# --------------------------
+def initialize_session_state():
+    defaults = {
+        "video_path": None,
+        "audio_path": None,
+        "audio_ready": False,
+        "audio_extract": "",
+    }
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
+
 
 # -------------------------------
 # Load Model (Cached)
@@ -162,19 +187,20 @@ def analyze_accent(audio_tensor, sample_rate, model):
         device = torch.device("cpu")  # or "cuda" if using GPU
         audio_tensor = audio_tensor.to(device)
         
-        mem = psutil.virtual_memory()
-        st.write(f"🔍 Memory used: {mem.percent}%")
+        
         
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
            
         with torch.no_grad():      
-            st.success("Starting Classification ")
+        
             out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
             accent_label = text_lab[0]
             readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
+            
+        display_memory_once()
         
         return readable_accent, round(score[0].item() * 100, 2)
     
@@ -195,27 +221,32 @@ def analyze_accent(audio_tensor, sample_rate, model):
 def main():
     
         
-    # Setting session state for variables reset after button clicks
-    if 'video_path' not in st.session_state:
-        st.session_state.video_path = None
-    if 'audio_path' not in st.session_state:
-        st.session_state.audio_path = None
-    if 'audio_ready' not in st.session_state:
-        st.session_state.audio_ready = False
-    if 'audio_extract' not in st.session_state: 
-        st.session_state.audio_extract = "" 
-
-    # Load model only once
-    
-    if 'classifier' not in st.session_state: 
-        st.session_state.classifier =  load_accent_model()
-        
-    # Assessing memory use
-    import psutil
-    mem = psutil.virtual_memory()
-    st.write(f"🔍 Memory used: {mem.percent}%")
   
-         
+    def reset_session_state_except_model():
+        
+        keys_to_keep = {"classifier"}  # Keep only the model
+        keys_to_delete = [key for key in st.session_state.keys() if key not in keys_to_keep]
+    
+        for key in keys_to_delete:
+            del st.session_state[key]
+            
+    # Initialize session vars
+    initialize_session_state()
+
+    #  Load model only once
+    if 'classifier' not in st.session_state: 
+        st.session_state.classifier = load_accent_model()
+
+    # 🔍 Show memory info after model load
+    display_memory_once()
+
+    if st.button("🔄 Analyze new video"):
+        reset_session_state_except_model()
+        st.experimental_rerun()
+
+
+  
+    # check if ffmpeg installed     
     import shutil
     if not shutil.which("ffmpeg"):
         raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
@@ -296,6 +327,8 @@ def main():
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
             try:
+                audio_path = extract_audio(st.session_state.video_path)
+                st.audio(st.session_state.audio_path , format='audio/wav')
                 
                 with st.spinner("Analyzing accent..."):
                          
