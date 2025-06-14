@@ -77,7 +77,7 @@ def extract_audio(video_path):
 # -------------------------------
 # Load Model (Cached)
 # -------------------------------
-#@st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
+@st.cache_resource(show_spinner="Loading model...")   # making sure we only load the model once per every app instance
 def load_accent_model():
     """
     Loads the pre-trained accent classification model from HuggingFace.
@@ -135,11 +135,12 @@ ACCENT_LABELS = {
     "hongkong": "Hong Kong Accent",
     "southatlandtic": "South Atlantic Accent"
 }
-def analyze_accent(audio_tensor, sample_rate, classifier):
+def analyze_accent(audio_tensor, sample_rate):
     """
     Uses the loaded model to classify the accent from the audio file.
     Returns the accent label and confidence score.
     """
+    global classifier 
     try:
         
         if sample_rate != 16000:
@@ -270,8 +271,8 @@ def main():
                     st.success("Sucessfully created a waveform!")
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
                     st.success("Sucessfully created a waveform!")
-                    classifier = load_accent_model()
-                    accent, confidence = analyze_accent(waveform, sample_rate, classifier) #Parse the processed audio to the model
+                    
+                    accent, confidence = analyze_accent(waveform, sample_rate) #Parse the processed audio to the model
 
 
                             # Display results
