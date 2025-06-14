@@ -10,7 +10,18 @@ from huggingface_hub import login
 import os
 import sys
 
+# Load custom class at startup
+module_name = "custom_interface"
+module_path = os.path.abspath("custom_interface.py")
+if module_name not in sys.modules:
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
+    custom_module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = custom_module
+    spec.loader.exec_module(custom_module)
+else:
+    custom_module = sys.modules[module_name]
 
+CustomEncoderWav2vec2Classifier = custom_module.CustomEncoderWav2vec2Classifier
 
 # -------------------------------
 # Utility Function: Download Video
@@ -146,7 +157,9 @@ def analyze_accent(audio_tensor, sample_rate, model):
     classifier = model
     audio_tensor = audio_tensor
     sample_rate = sample_rate
-    
+    st.write(f"Model class: {classifier.__class__}")
+    st.write(f"Module: {classifier.__class__.__module__}")
+     
     try:
         
         if sample_rate != 16000:
@@ -228,13 +241,13 @@ def main():
         if st.button("Download from Social Media"):
             video_path = download_social_video(yt_url)
             if video_path:
-                st.success("✅ Video downloaded successfully.")
+                st.success("Video downloaded from social media.")
                 st.session_state.video_path = video_path 
 
     # Process and analyze video
     if st.session_state.video_path and not st.session_state.audio_extract:   
         if st.button("Extract Audio"):
-            
+            st.success(st.session_state.audio_path)
     
             audio_path = extract_audio(video_path)   
             st.session_state.audio_path = audio_path
@@ -267,10 +280,14 @@ def main():
     if st.session_state.audio_ready and st.session_state.audio_path:   
         if st.button("Analyze accent"):
             try:
-                
-                    
+                if st.session_state.classifier is not None:
+                    st.success("Classifier still exist")
+
+                else:
+                    st.error("Classifier failed") 
                 with st.spinner("Analyzing accent..."):
                          
+                    st.success("Sucessfully created a waveform!")
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
                     st.success(st.session_state.classifier)
                     
