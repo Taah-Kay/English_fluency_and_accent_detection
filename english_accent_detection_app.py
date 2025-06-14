@@ -10,18 +10,6 @@ from huggingface_hub import login
 import os
 import sys
 
-# Load custom class at startup
-module_name = "custom_interface"
-module_path = os.path.abspath("custom_interface.py")
-if module_name not in sys.modules:
-    spec = importlib.util.spec_from_file_location(module_name, module_path)
-    custom_module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = custom_module
-    spec.loader.exec_module(custom_module)
-else:
-    custom_module = sys.modules[module_name]
-
-CustomEncoderWav2vec2Classifier = custom_module.CustomEncoderWav2vec2Classifier
 
 # -------------------------------
 # Utility Function: Download Video
