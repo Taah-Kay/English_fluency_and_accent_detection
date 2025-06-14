@@ -162,6 +162,9 @@ def analyze_accent(audio_tensor, sample_rate, model):
         device = torch.device("cpu")  # or "cuda" if using GPU
         audio_tensor = audio_tensor.to(device)
         
+        mem = psutil.virtual_memory()
+        st.write(f"🔍 Memory used: {mem.percent}%")
+        
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
