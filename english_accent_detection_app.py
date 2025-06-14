@@ -175,9 +175,12 @@ def analyze_accent(audio_tensor, sample_rate, model):
         #readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
         
         #return readable_accent, round(score[0].item() * 100, 2)
-        st.success("Classifier object exists. Skipping actual inference for now.")
-        return "Mock Accent", 99.9
+        st.write("Got classifier:", classifier)
+        st.writ("Waveform shape:", audio_tensor.shape)
+        st.writ("Sample rate:", sample_rate)
+        return "Testing", 99.9
 
+        
     
     
     except Exception as e:
