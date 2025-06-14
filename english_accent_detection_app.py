@@ -97,11 +97,11 @@ def load_accent_model():
     Loads the pre-trained accent classification model from HuggingFace.
     """
     # Authenticate with Hugging Face to avoid 429 errors
-    hf_token = os.getenv("HF_TOKEN")
+    hf_token = os.getenv("HF_TOKEN") or os.getenv("hf_token")  # Catch both cases
     if hf_token:
         login(token=hf_token)
-    
-    )
+    else:
+        st.warning("⚠️ Hugging Face token not found in environment variables.")
     
     st.write("🔧 Initializing PyTorch and model...")
     from speechbrain.pretrained.interfaces import foreign_class
