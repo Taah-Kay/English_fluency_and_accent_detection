@@ -160,7 +160,7 @@ def analyze_accent(audio_tensor, sample_rate, model):
         # Add batch dimension to get [1, time]
         audio_tensor = audio_tensor.unsqueeze(0).to(torch.float32) 
         st.write(audio_tensor.shape)
-        '''
+        
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
@@ -172,8 +172,8 @@ def analyze_accent(audio_tensor, sample_rate, model):
             accent_label = text_lab[0]
             readable_accent = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
         
-        return readable_accent, round(score[0].item() * 100, 2)'''
-        return "Test" , 99
+        return readable_accent, round(score[0].item() * 100, 2)
+    
         
 
         
