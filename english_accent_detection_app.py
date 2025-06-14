@@ -101,7 +101,7 @@ def load_accent_model():
     if hf_token:
         login(token=hf_token)
     
-    login(token=os.getenv("hf_token"))
+    )
     
     st.write("🔧 Initializing PyTorch and model...")
     from speechbrain.pretrained.interfaces import foreign_class
