@@ -89,7 +89,7 @@ def load_accent_model():
     Loads the pre-trained accent classification model from HuggingFace.
     """
     # Authenticate with Hugging Face to avoid 429 errors
-    try
+    try:
         login(token= os.getenv("HF_TOKEN") or os.getenv("hf_token"))
         
     except Exception as e:
