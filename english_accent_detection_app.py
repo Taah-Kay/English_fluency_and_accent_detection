@@ -1,21 +1,6 @@
 
-import importlib
-import sys
 import os
-
-# Load custom class at startup
-module_name = "custom_interface"
-module_path = os.path.abspath("custom_interface.py")
-if module_name not in sys.modules:
-    spec = importlib.util.spec_from_file_location(module_name, module_path)
-    custom_module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = custom_module
-    spec.loader.exec_module(custom_module)
-else:
-    custom_module = sys.modules[module_name]
-
-CustomEncoderWav2vec2Classifier = custom_module.CustomEncoderWav2vec2Classifier
-
+from custom_interface import CustomEncoderWav2vec2Classifier
 import streamlit as st
 from moviepy.editor import VideoFileClip  
 import requests
@@ -260,7 +245,7 @@ def main():
         if st.button("Extract Audio"):
             
     
-            audio_path = extract_audio(video_path)   
+            audio_path = extract_audio(st.session_state.video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
             st.session_state.audio_extract = "extracted" 
