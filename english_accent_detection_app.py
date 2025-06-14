@@ -1,15 +1,6 @@
-import importlib
-import streamlit as st
-from moviepy.editor import VideoFileClip  
-import requests
-import tempfile
-import subprocess
-import torchaudio
-#from transformers import pipeline
-from huggingface_hub import login
-import os
-import sys
 
+import importlib
+import sys
 # Load custom class at startup
 module_name = "custom_interface"
 module_path = os.path.abspath("custom_interface.py")
@@ -22,6 +13,19 @@ else:
     custom_module = sys.modules[module_name]
 
 CustomEncoderWav2vec2Classifier = custom_module.CustomEncoderWav2vec2Classifier
+
+import streamlit as st
+from moviepy.editor import VideoFileClip  
+import requests
+import tempfile
+import subprocess
+import torchaudio
+#from transformers import pipeline
+from huggingface_hub import login
+import os
+
+
+
 
 # -------------------------------
 # Utility Function: Download Video
