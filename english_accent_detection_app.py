@@ -149,6 +149,16 @@ def analyze_accent(audio_tensor, sample_rate, model):
     
      
     try:
+
+        # Convert stereo to mono (if needed)
+        if audio_tensor.shape[0] > 1:
+            audio_tensor = audio_tensor.mean(dim=0, keepdim=True)  # [1, time]
+
+        # Remove channel dimension to get [time]
+        audio_tensor = audio_tensor.squeeze(0)
+
+        # Add batch dimension to get [1, time]
+        audio_tensor = audio_tensor.unsqueeze(0).to(torch.float32) 
         
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
