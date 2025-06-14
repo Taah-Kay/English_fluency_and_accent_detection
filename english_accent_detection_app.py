@@ -80,7 +80,6 @@ def extract_audio(video_path):
         return None
 
 import psutil
-
 # --------------------------
 # Utility: Show memory once
 # --------------------------
@@ -193,8 +192,9 @@ def analyze_accent(audio_tensor, sample_rate, model):
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
             audio_tensor = resampler(audio_tensor)
            
-        with torch.no_grad():      
-        
+        with torch.no_grad():  
+            
+            display_memory_once()
             out_prob, score, index, text_lab = classifier.classify_batch(audio_tensor)
         
             accent_label = text_lab[0]
