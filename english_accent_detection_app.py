@@ -188,7 +188,7 @@ def main():
     st.title("🎙️ English Accent Audio Detector")
 
     # Load model only once
-    #classifier =  load_accent_model()
+    classifier =  load_accent_model()
     # whisper_pipe = load_whisper()
 
     # Input selection
