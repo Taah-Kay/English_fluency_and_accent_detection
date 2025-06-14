@@ -114,7 +114,12 @@ def load_accent_model():
     """
 
     st.write("🔧 Initializing PyTorch and model...")
-
+    
+    if not os.getenv("HF_TOKEN") and not os.getenv("hf_token"):
+        
+        st.error("❌ Hugging Face token not found. Please set HF_TOKEN in environment variables.")
+        st.stop()
+        
     try:
         classifier = foreign_class(
             source="Jzuluaga/accent-id-commonaccent_xlsr-en-english",
