@@ -7,6 +7,7 @@ import requests
 import tempfile
 import subprocess
 import torchaudio
+import torch
 #from transformers import pipeline
 from huggingface_hub import login
 
