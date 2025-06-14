@@ -159,6 +159,8 @@ def analyze_accent(audio_tensor, sample_rate, model):
         # Add batch dimension to get [1, time]
         audio_tensor = audio_tensor.unsqueeze(0).to(torch.float32) 
         st.write(audio_tensor.shape)
+        device = torch.device("cpu")  # or "cuda" if using GPU
+        audio_tensor = audio_tensor.to(device)
         
         if sample_rate != 16000:
             resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
@@ -176,12 +178,13 @@ def analyze_accent(audio_tensor, sample_rate, model):
         
 
         
-    
+   
+        return None, None
     
     except Exception as e:
-        st.error(f"❌ Error during accent classification: {e}")
-        st.stop()
-
+         import traceback
+        st.error(f"❌ Error during accent classification:\n{traceback.format_exc()}")
+        return None, None
 
 # -------------------------------
 # Main Streamlit App
