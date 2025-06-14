@@ -8,6 +8,7 @@ import tempfile
 import subprocess
 import torchaudio
 import torch
+from speechbrain.pretrained.interfaces import foreign_class
 #from transformers import pipeline
 from huggingface_hub import login
 
@@ -88,15 +89,13 @@ def load_accent_model():
     Loads the pre-trained accent classification model from HuggingFace.
     """
     # Authenticate with Hugging Face to avoid 429 errors
-    hf_token = os.getenv("HF_TOKEN") or os.getenv("hf_token")  # Catch both cases
-    if hf_token:
-        login(token=hf_token)
-    else:
-        st.warning("⚠️ Hugging Face token not found in environment variables.")
-    
+    try
+        login(token= os.getenv("HF_TOKEN") or os.getenv("hf_token"))
+        
+    except Exception as e:
+                st.error(f"❌ ⚠️ Hugging Face token not found in environment variables: {e}")
+                st.stop()
     st.write("🔧 Initializing PyTorch and model...")
-    from speechbrain.pretrained.interfaces import foreign_class
-    import torchaudio
 
     try:
         classifier = foreign_class(
