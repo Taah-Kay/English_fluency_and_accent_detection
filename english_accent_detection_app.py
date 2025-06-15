@@ -9,7 +9,7 @@ import subprocess
 import torchaudio
 import torch
 from speechbrain.pretrained.interfaces import foreign_class
-#from transformers import pipeline
+from transformers import pipeline
 from huggingface_hub import login
 import psutil
 import traceback
@@ -97,7 +97,7 @@ def initialize_session_state():
         "video_path": None,
         "audio_path": None,
         "audio_ready": False,
-        "audio_extract": "",
+        "transcription": "",
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -213,7 +213,7 @@ def main():
   
     def reset_session_state_except_model():
         
-        keys_to_keep = {"classifier"}  # Keep only the model
+        keys_to_keep = {"classifier", "whisper" }  # Keep only the models
         keys_to_delete = [key for key in st.session_state.keys() if key not in keys_to_keep]
     
         for key in keys_to_delete:
@@ -222,9 +222,12 @@ def main():
     # Initialize session vars
     initialize_session_state()
 
-    #  Load model only once
+    #  Load models only once
     if 'classifier' not in st.session_state: 
         st.session_state.classifier = load_accent_model()
+    if 'whisper' not in st.session_state: 
+        st.session_state.whisper = load_whisper()
+ 
 
     # 🔍 Show memory info after model load
     display_memory_once()
@@ -281,19 +284,18 @@ def main():
                 st.session_state.video_path = video_path 
 
     # Process and analyze video
-    if st.session_state.video_path and not st.session_state.audio_extract:   
+    if st.session_state.video_path and not st.session_state.transcription:   
         if st.button("Extract Audio"):
             
     
             audio_path = extract_audio(st.session_state.video_path)   
             st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
-            st.session_state.audio_extract = "extracted" 
             
             if audio_path:
                 st.audio(st.session_state.audio_path , format='audio/wav')
 
-                """ Removed languaage filter because of streamlit memory restrictions
+                
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
                     whisper_result = whisper_pipe(audio_path, return_language=True)
@@ -301,14 +303,17 @@ def main():
 
                 except Exception as e:
                             st.error(f"❌ Error filtering audio: {e}")
-                            st.stop()"""
+                            st.stop()
 
-                lang = "en"    
+                  
                 if lang is None or lang.lower() not in ["en", "english"]:
                         os.remove(video_path)
                         os.remove(audio_path)
                         st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
-                else:
+                else:    
+                    # Step 3: Show transcription for audio
+                    st.session_state.transcription = whisper_result.get('text', '')[:200]
+                    st.markdown(" Transcript Preview: ", st.session_state.transcription)
                     st.success("🎵 Audio extracted and ready for analysis!")
                 
                 # Perform accent analysis
@@ -327,9 +332,6 @@ def main():
                 st.subheader("🎧 Accent Detection Result")
                 st.write(f"The speaker in the video has a ", accent)
                 st.write(f"🧠 Confidence Score: **{confidence}%**")
-
-                            # Step 3: Show transcription for audio
-                            #st.markdown(f"**Transcript Preview:** {whisper_result.get('text', '')[:200]}...")
 
 
                     
