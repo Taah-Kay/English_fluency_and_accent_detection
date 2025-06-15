@@ -277,7 +277,7 @@ def main():
       #YouTube and TikTok video downloads
     elif option == "Enter YouTube link":
         yt_url = st.text_input("Paste YouTube")
-        if st.button("Download from Social Media"):
+        if st.button("Download Video"):
             video_path = download_social_video(yt_url)
             if video_path:
                 st.success("✅ Video downloaded successfully.")
