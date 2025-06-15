@@ -298,7 +298,7 @@ def main():
                 
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-                    whisper_result = whisper_pipe(audio_path, return_language=True)
+                    whisper_result = st.session_state.whisper(audio_path, return_language=True)
                     lang = whisper_result.get('chunks', [{}])[0].get('language', None)
 
                 except Exception as e:
