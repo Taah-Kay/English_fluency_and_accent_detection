@@ -341,9 +341,8 @@ def main():
     if st.session_state.audio_path and not st.session_state.transcription:   
         if st.button("Extract Audio"):
             
-            st.session_state.audio_ready = True
-            
-            if audio_path:
+            st.session_state.audio_ready = True      
+            if if st.session_state.audio_path:
                 st.audio(st.session_state.audio_path , format='audio/wav')
                 
                 try:
@@ -355,7 +354,6 @@ def main():
                     
                     if info.language != "en":
                     
-                        os.remove(audio_path)
                         st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
                     else:    
                     # Show transcription for audio
@@ -377,10 +375,8 @@ def main():
             try:         
                 with st.spinner("Analyzing accent..."):
                          
-                    
                     waveform, sample_rate = torchaudio.load(st.session_state.audio_path) # Process the audio for model inference
                     accent, confidence = analyze_accent(waveform, sample_rate, st.session_state.classifier) #Parse the processed audio to the model
-
 
                             # Display results
                 st.subheader("🎧 Accent Detection Result")
