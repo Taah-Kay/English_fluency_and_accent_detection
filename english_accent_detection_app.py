@@ -372,7 +372,7 @@ def main():
                 
                 # Perform accent analysis
                  
-    if st.session_state.audio_ready and st.session_state.audio_path:   
+    if st.session_state.audio_ready:   
         if st.button("Analyze accent"):
             try:         
                 with st.spinner("Analyzing accent..."):
