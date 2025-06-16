@@ -63,6 +63,8 @@ if st.session_state.audio_path and not st.session_state.transcription:
         st.session_state.audio_ready = True
         st.audio(st.session_state.audio_path, format='audio/wav')
 
+        mem = psutil.virtual_memory()
+        st.write(f"🔍 Memory used: {mem.percent}%")
         with st.spinner("🔍 Transcribing with Whisper..."):
             segments, _ = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
             transcription = " ".join([seg.text for seg in segments])
@@ -71,10 +73,12 @@ if st.session_state.audio_path and not st.session_state.transcription:
         st.success("📝 Transcription complete.")
         st.markdown(f"**Transcription:**\n\n{st.session_state.transcription}")
 
-if st.session_state.transcription and st.session_state.audio_path:
+if st.session_state.transcription:
     if st.button("🗣️ Analyze Accent"):
         with st.spinner("🔍 Analyzing accent..."):
             try:
+                mem = psutil.virtual_memory()
+                st.write(f"🔍 Memory used: {mem.percent}%")
                 waveform, sample_rate = torchaudio.load(st.session_state.audio_path)
                 readable_accent, confidence = analyze_accent(waveform, sample_rate, st.session_state.classifier)
 
