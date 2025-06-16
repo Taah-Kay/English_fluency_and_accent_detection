@@ -25,4 +25,4 @@ def load_accent_model():
 
 @st.cache_resource(show_spinner="Loading Whisper...")
 def load_whisper():
-    return WhisperModel("tiny", device="cpu")
+    return WhisperModel("tiny", device="cpu", compute_type="int8_float32")
