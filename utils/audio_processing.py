@@ -13,49 +13,74 @@ AudioSegment.converter = shutil.which("ffmpeg")
 def download_audio_as_wav(url, max_filesize_mb=70):
     """
     Downloads audio from a URL using yt-dlp, then converts it to WAV using ffmpeg.
-    Ensures file size is within the limit. Returns path to .wav file or None on failure.
+    Supports fallback formats (.m4a, .webm, .opus) if .mp3 not found.
+    Cleans up temporary files after use.
+    Returns path to .wav file or None on failure.
     """
+    audio_path = None
+    temp_wav = None
+
     try:
-        temp_dir = tempfile.mkdtemp()
-        max_bytes = max_filesize_mb * 1024 * 1024
-        output_template = os.path.join(temp_dir, "audio.%(ext)s")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            max_bytes = max_filesize_mb * 1024 * 1024
+            output_template = os.path.join(temp_dir, "audio.%(ext)s")
 
-        # Download using yt-dlp
-        download_cmd = [
-            "yt-dlp",
-            "-f", f"bestaudio[filesize<={max_bytes}]",
-            "--extract-audio",
-            "--audio-format", "mp3",  # You may consider omitting this for better quality
-            "--no-playlist",
-            "-o", output_template,
-            url
-        ]
+            # yt-dlp download command
+            download_cmd = [
+                "yt-dlp",
+                "-f", f"bestaudio[filesize<={max_bytes}]",
+                "--extract-audio",
+                "--audio-format", "mp3",
+                "--no-playlist",
+                "--no-cache-dir",
+                "--restrict-filenames",
+                "-o", output_template,
+                url
+            ]
 
-        subprocess.run(download_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+            subprocess.run(download_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
 
-        # Find downloaded audio
-        mp3_files = [f for f in os.listdir(temp_dir) if f.endswith(".mp3")]
-        if not mp3_files:
-            st.error("❌ No MP3 file found after download.")
-            return None
-        mp3_path = os.path.join(temp_dir, mp3_files[0])
+            # Try to locate audio file (mp3 or fallback)
+            common_exts = [".mp3", ".m4a", ".webm", ".opus"]
+            for ext in common_exts:
+                matches = [f for f in os.listdir(temp_dir) if f.endswith(ext)]
+                if matches:
+                    audio_path = os.path.join(temp_dir, matches[0])
+                    break
 
-        # Convert to WAV
-        temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-        convert_cmd = ["ffmpeg", "-y", "-i", mp3_path, temp_wav.name]
-        subprocess.run(convert_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        
-        return temp_wav.name
+            if not audio_path or not os.path.exists(audio_path):
+                st.error("❌ No supported audio file found after download.")
+                return None
+
+            # Convert to WAV (outside temp_dir so it persists)
+            temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+            convert_cmd = ["ffmpeg", "-y", "-i", audio_path, temp_wav.name]
+            subprocess.run(convert_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+
+            # Return WAV file path; temp_dir and downloaded audio cleaned automatically
+            return temp_wav.name
 
     except subprocess.CalledProcessError as e:
-        st.error("❌ Audio download or conversion failed.")
-        st.code(e.stderr.decode() if hasattr(e, 'stderr') else str(e))
-        if mp3_path and os.path.exists(mp3_path):
-            os.remove(mp3_path)
-        if temp_dir and os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir, ignore_errors=True)
+        error_msg = e.stderr.decode() if hasattr(e, "stderr") else str(e)
+        if "st" in globals():
+            st.error("❌ Audio download or conversion failed.")
+            st.code(error_msg)
+        else:
+            print("Error during processing:", error_msg)
+        # Cleanup wav if created
+        if temp_wav is not None and os.path.exists(temp_wav.name):
+            os.remove(temp_wav.name)
         return None
 
+    except Exception as e:
+        if "st" in globals():
+            st.error("❌ Unexpected error occurred.")
+            st.code(str(e))
+        else:
+            print("Unexpected error:", e)
+        if temp_wav is not None and os.path.exists(temp_wav.name):
+            os.remove(temp_wav.name)
+        return None
     
 # --------------------------
 # Utility: Trim audios to 2 minutes
