@@ -46,6 +46,7 @@ if option == "Upload video file":
         audio_path = trim_video(temp_video_path.name)
         st.success("✅ Video uploaded successfully.")
         st.session_state.audio_path = audio_path
+        shutil.rmtree(temp_dir, ignore_errors=True) # clear temporary files
 
 elif option == "Enter Video Url":
     yt_url = st.text_input("Paste YouTube URL")
@@ -56,22 +57,35 @@ elif option == "Enter Video Url":
         if audio_path:
             st.success("✅ Video downloaded successfully.")
             st.session_state.audio_path = audio_path
+            shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
 
 # Transcription and Accent Analysis
 if st.session_state.audio_path and not st.session_state.transcription:
     if st.button("🎧 Extract Audio"):
         st.session_state.audio_ready = True
         st.audio(st.session_state.audio_path, format='audio/wav')
-
+        
         mem = psutil.virtual_memory()
-        st.write(f"🔍 Memory used: {mem.percent}%")
-        with st.spinner("🔍 Transcribing with Whisper..."):
-            segments, _ = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
-            transcription = " ".join([seg.text for seg in segments])
-            st.session_state.transcription = transcription
+        st.write(f"🔍 Memory used: {mem.percent}%")    
+        #Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
+        segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
+            
+        # Convert segments (generator) to full transcription string
+        st.session_state.transcription = " ".join([segment.text for segment in segments])
+                  
+        if info.language != "en":
+                    
+            st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
+        else:    
+            # Show transcription for audio
+            with st.spinner("Transcribing audio..."):
+                st.markdown(" Transcript Preview")
+                st.markdown(st.session_state.transcription)
+                st.success("🎵 Audio extracted and ready for analysis!")
+                mem = psutil.virtual_memory()
+                st.write(f"🔍 Memory used: {mem.percent}%")
 
-        st.success("📝 Transcription complete.")
-        st.markdown(f"**Transcription:**\n\n{st.session_state.transcription}")
+       
 
 if st.session_state.transcription:
     if st.button("🗣️ Analyze Accent"):
@@ -85,9 +99,10 @@ if st.session_state.transcription:
                 if readable_accent:
                     st.success(f"✅ Accent Detected: **{readable_accent}**")
                     st.info(f"📊 Confidence: {confidence}%")
+                    shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
                 else:
                     st.warning("Could not determine accent.")
-
+                     shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
             except Exception as e:
                 st.error("❌ Failed to analyze accent.")
                 st.code(str(e))
