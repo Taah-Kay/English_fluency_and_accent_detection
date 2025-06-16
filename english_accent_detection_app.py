@@ -8,6 +8,7 @@ import tempfile
 import subprocess
 import torchaudio
 import torch
+from pydub import AudioSegment
 from speechbrain.pretrained.interfaces import foreign_class
 from faster_whisper import WhisperModel
 from huggingface_hub import login
@@ -38,23 +39,48 @@ def download_video_from_url(url):
         st.error(f"❌ Error downloading video: {e}")
         return None
 
-def download_social_video(url):
-    """Download 240p video from YouTube yt-dlp.""" # we are more interested in the audio not picture quality ***Memory management
+def download_audio_as_wav(url, max_filesize_mb=70):
+    """
+    Downloads audio from a YouTube (or other) URL using yt-dlp, extracts to mp3,
+    then converts it to WAV using ffmpeg. Ensures file size is within the limit.
+    Returns path to the .wav file.
+    """
     try:
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
-        command = [
+        #Download mp3
+        temp_mp3 = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+        max_bytes = max_filesize_mb * 1024 * 1024
+
+        download_cmd = [
             "yt-dlp",
-            "-f", "bestvideo[height<=240]+bestaudio/best[height<=240]",
-            "-o", temp_file.name,
+            "-f", f"bestaudio[filesize<={max_bytes}]",
+            "--extract-audio",
+            "--audio-format", "mp3",
+            "-o", temp_mp3.name,
             url
         ]
-        subprocess.run(command, check=True)
-        return temp_file.name
-    except subprocess.CalledProcessError as e:
-        st.error("Download failed. The URL may be invalid or unsupported.")
+
+        subprocess.run(download_cmd, check=True)
+
+        # Convert to WAV
+        temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+        convert_cmd = [
+            "ffmpeg", "-y",  # Overwrite if exists
+            "-i", temp_mp3.name,
+            temp_wav.name
+        ]
+        subprocess.run(convert_cmd, check=True)
+
+        # clean up the mp3 file
+        os.remove(temp_mp3.name)
+
+        return temp_wav.name
+
+    except subprocess.CalledProcessError:
+        st.error("❌ Download or conversion failed. The video may be too long or unsupported.")
         return None
+
     except Exception as e:
-        st.error(f"Unexpected error: {e}")
+        st.error(f"❌ Unexpected error: {e}")
         return None
 
 # --------------------------
@@ -67,20 +93,50 @@ def trim_video(video_path, max_duration=120):
     Returns the path to the trimmed video.
     """
     try:
-        trimmed_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
+        
         video = VideoFileClip(video_path)
 
         duration = video.duration
         if duration > max_duration:
-            video = video.subclip(0, max_duration)
-            video.write_videofile(trimmed_path, codec="libx264", audio_codec="aac")
-            return trimmed_path
+            video = video.subclip(0, max_duration) 
+            audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
+            video.audio.write_audiofile(audio_path, fps=16000, codec='pcm_s16le') # convert trimmed video to audio.wav 
+            
+            return audio_path
         else:
-            return video_path
+            # just convert to audio.wav
+            audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
+            video.audio.write_audiofile(audio_path, fps=16000, codec='pcm_s16le') # convert trimmed video to audio.wav 
+            return audio_path
     except Exception as e:
         st.error(f"❌ Error trimming video: {e}")
         return None
+        
+# --------------------------
+# Utility: Trim audios to 2 minutes
+# --------------------------
 
+def trim_audio(input_wav_path, max_duration_sec=120):
+    """
+    Trims the input .wav file to the first `max_duration_sec` seconds.
+    Returns the path to the trimmed .wav file.
+    """
+    try:
+        # Load audio using pydub
+        audio = AudioSegment.from_wav(input_wav_path)
+
+        # Trim to max_duration_sec
+        trimmed_audio = audio[:max_duration_sec * 1000]  # pydub uses milliseconds
+
+        # Save to a new temporary .wav file
+        trimmed_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+        trimmed_audio.export(trimmed_file.name, format="wav")
+
+        return trimmed_file.name
+
+    except Exception as e:
+        st.error(f"❌ Error trimming audio: {e}")
+        return None
 # -------------------------------
 # Utility Function: Extract Audio
 # -------------------------------
@@ -118,7 +174,6 @@ def display_memory_once():
 # --------------------------
 def initialize_session_state():
     defaults = {
-        "video_path": None,
         "audio_path": None,
         "audio_ready": False,
         "transcription": "",
@@ -285,43 +340,29 @@ def main():
             temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
             with open(temp_video_path.name, "wb") as f:
                 f.write(uploaded_video.read())
-            video_path = trim_video(temp_video_path.name)
+            audio_path = trim_video(temp_video_path.name)    # returns an audio file not more than 2 minutes long
             st.success("✅ Video uploaded successfully.")
-            st.session_state.video_path = video_path 
+            st.session_state.audio_path = audio_path 
 
-    # Direct URL input option
-    elif option == "Enter direct MP4 URL":
-        video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
-        if st.button("Download Video"):
-            video_path = download_video_from_url(video_url)
-            video_path = trim_video(video_path)
-            if video_path:
-                st.success("✅ Video downloaded successfully.")
-                st.session_state.video_path = video_path 
-
-     
+  
       #YouTube video downloads
     elif option == "Enter YouTube link":
         yt_url = st.text_input("Paste YouTube")
         if st.button("Download from Social Media"):
-            video_path = download_social_video(yt_url)
-            video_path = trim_video(video_path)      
+            audio_path = download_audio_as_wav(yt_url)
+            audio_path = trim_audio(audio_path)      
             if video_path:
                 st.success("✅ Video downloaded successfully.")
-                st.session_state.video_path = video_path 
+                st.session_state.audio_path = audio_path 
 
     # Process and analyze video
-    if st.session_state.video_path and not st.session_state.transcription:   
+    if st.session_state.audio_path and not st.session_state.transcription:   
         if st.button("Extract Audio"):
             
-    
-            audio_path = extract_audio(st.session_state.video_path)   
-            st.session_state.audio_path = audio_path
             st.session_state.audio_ready = True
             
             if audio_path:
                 st.audio(st.session_state.audio_path , format='audio/wav')
-
                 
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
@@ -337,7 +378,7 @@ def main():
 
                   
                 if info.language != "en":
-                        os.remove(video_path)
+                    
                         os.remove(audio_path)
                         st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
                 else:    
