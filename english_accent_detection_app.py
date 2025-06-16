@@ -57,6 +57,29 @@ def download_social_video(url):
         st.error(f"Unexpected error: {e}")
         return None
 
+# --------------------------
+# Utility: Trim videos to 2 minutes
+# --------------------------
+
+def trim_video(video_path, max_duration=120):
+    """
+    Trims the video to the specified duration (in seconds).
+    Returns the path to the trimmed video.
+    """
+    try:
+        trimmed_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
+        video = VideoFileClip(video_path)
+
+        duration = video.duration
+        if duration > max_duration:
+            video = video.subclip(0, max_duration)
+            video.write_videofile(trimmed_path, codec="libx264", audio_codec="aac")
+            return trimmed_path
+        else:
+            return video_path
+    except Exception as e:
+        st.error(f"❌ Error trimming video: {e}")
+        return None
 
 # -------------------------------
 # Utility Function: Extract Audio
@@ -78,6 +101,7 @@ def extract_audio(video_path):
     except Exception as e:
         st.error(f"❌ Error extracting audio: {e}")
         return None
+
 
 
 # --------------------------
@@ -261,7 +285,7 @@ def main():
             temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
             with open(temp_video_path.name, "wb") as f:
                 f.write(uploaded_video.read())
-            video_path = temp_video_path.name
+            video_path = trim_video(temp_video_path.name)
             st.success("✅ Video uploaded successfully.")
             st.session_state.video_path = video_path 
 
@@ -270,16 +294,18 @@ def main():
         video_url = st.text_input("Enter direct video URL (e.g., MP4 link)")
         if st.button("Download Video"):
             video_path = download_video_from_url(video_url)
+            video_path = trim_video(video_path)
             if video_path:
                 st.success("✅ Video downloaded successfully.")
                 st.session_state.video_path = video_path 
 
      
-      #YouTube and TikTok video downloads
+      #YouTube video downloads
     elif option == "Enter YouTube link":
         yt_url = st.text_input("Paste YouTube")
         if st.button("Download from Social Media"):
             video_path = download_social_video(yt_url)
+            video_path = trim_video(video_path)      
             if video_path:
                 st.success("✅ Video downloaded successfully.")
                 st.session_state.video_path = video_path 
