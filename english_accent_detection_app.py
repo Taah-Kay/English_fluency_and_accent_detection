@@ -346,15 +346,16 @@ def main():
             if audio_path:
                 st.success("✅ Video downloaded successfully.")
                 st.session_state.audio_path = audio_path 
-
+                
+    mem = psutil.virtual_memory()
+    st.write(f"🔍 Memory used: {mem.percent}%")
     # Process and analyze video
     if st.session_state.audio_path and not st.session_state.transcription:   
         if st.button("Extract Audio"):
             
             st.session_state.audio_ready = True      
             st.audio(st.session_state.audio_path , format='audio/wav')
-            mem = psutil.virtual_memory()
-            st.write(f"🔍 Memory used: {mem.percent}%")
+            
                 
             try:
                 st.success("Now filtering language")
