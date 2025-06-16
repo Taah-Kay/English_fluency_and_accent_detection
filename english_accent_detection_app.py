@@ -45,7 +45,11 @@ def download_audio_as_wav(url, max_filesize_mb=70):
             url
         ]
 
-        subprocess.run(download_cmd, check=True)
+        result = subprocess.run(download_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            st.error("❌ yt-dlp failed to download the audio.")
+            st.code(result.stderr.decode())
+            return None
 
         # Convert to WAV
         temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
