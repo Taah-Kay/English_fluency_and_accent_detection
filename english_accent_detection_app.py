@@ -338,28 +338,28 @@ def main():
         if st.button("Extract Audio"):
             
             st.session_state.audio_ready = True      
-            if st.session_state.audio_path:
-                st.audio(st.session_state.audio_path , format='audio/wav')
+            st.audio(st.session_state.audio_path , format='audio/wav')
                 
-                try:
-                # Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-                    segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=1)
-
-                    # Convert segments (generator) to full transcription string
-                    st.session_state.transcription = " ".join([segment.text for segment in segments])
+            try:
+                st.success("Now filtering language")
+            # Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
+                segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
+                st.success("Now joining segments ")
+                # Convert segments (generator) to full transcription string
+                st.session_state.transcription = " ".join([segment.text for segment in segments])
+                st.success("sucessfully created segments")    
+                if info.language != "en":
                     
-                    if info.language != "en":
-                    
-                        st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
-                    else:    
-                    # Show transcription for audio
-                        with st.spinner("Transcribing audio..."):
-                            st.markdown(" Transcript Preview")
-                            st.markdown(st.session_state.transcription)
-                            st.success("🎵 Audio extracted and ready for analysis!")
-                except Exception as e:
-                            st.error(f"❌ Error filtering audio: {e}")
-                            st.stop()
+                    st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
+                else:    
+                # Show transcription for audio
+                    with st.spinner("Transcribing audio..."):
+                        st.markdown(" Transcript Preview")
+                        st.markdown(st.session_state.transcription)
+                        st.success("🎵 Audio extracted and ready for analysis!")
+            except Exception as e:
+                        st.error(f"❌ Error filtering audio: {e}")
+                        st.stop()
 
                   
                 
