@@ -15,6 +15,9 @@ import psutil
 import traceback
 import shutil
 from pydub import AudioSegment
+from moviepy.config import change_settings
+
+change_settings({"FFMPEG_BINARY": "ffmpeg"})  # Ensures MoviePy uses system ffmpeg
 AudioSegment.converter = shutil.which("ffmpeg")
 
 
