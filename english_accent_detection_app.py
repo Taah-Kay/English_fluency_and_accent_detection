@@ -77,7 +77,7 @@ def trim_video(video_path, max_duration=120):
     """
     try:
         # Use MoviePy only to check the video duration
-        video = VideoFileClip(video_path)
+        video = VideoFileClip(video_path, audio=True, verbose=True)
         duration = video.duration
         video.close()
 
