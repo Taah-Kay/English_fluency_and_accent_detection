@@ -13,6 +13,7 @@ from faster_whisper import WhisperModel
 from huggingface_hub import login
 import psutil
 import traceback
+import shutil
 from pydub import AudioSegment
 AudioSegment.converter = shutil.which("ffmpeg")
 
@@ -301,7 +302,6 @@ def main():
 
   
     # check if ffmpeg installed     
-    import shutil
     if not shutil.which("ffmpeg"):
         raise EnvironmentError("FFmpeg not found. Please install ffmpeg or add it to PATH.")
 
