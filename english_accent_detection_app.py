@@ -120,28 +120,6 @@ def trim_audio(input_wav_path, max_duration_sec=120):
     except Exception as e:
         st.error(f"❌ Error trimming audio: {e}")
         return None
-# -------------------------------
-# Utility Function: Extract Audio
-# -------------------------------
-def extract_audio(video_path):
-    """
-    Extracts audio from the video and saves it as a WAV file.
-    Returns the path to the audio file.
-    """
-    try:
-        video = VideoFileClip(video_path)
-        if video.audio is None:
-            st.error("❌ No audio found in the video.")
-            return None
-
-        audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-        video.audio.write_audiofile(audio_path, fps=16000, codec='pcm_s16le')
-        return audio_path
-    except Exception as e:
-        st.error(f"❌ Error extracting audio: {e}")
-        return None
-
-
 
 # --------------------------
 # Utility: Show memory once
