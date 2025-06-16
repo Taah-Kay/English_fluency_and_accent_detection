@@ -72,29 +72,44 @@ def download_audio_as_wav(url, max_filesize_mb=70):
 
 def trim_video(video_path, max_duration=120):
     """
-    Trims the video to the specified duration (in seconds).
-    Returns the path to the trimmed video.
+    Trims the video to the specified duration (in seconds) and extracts audio using ffmpeg.
+    Returns the path to the trimmed audio (.wav).
     """
     try:
-        
+        # Use MoviePy only to check the video duration
         video = VideoFileClip(video_path)
-
         duration = video.duration
-        if duration > max_duration:
-            video = video.subclip(0, max_duration) 
-            audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-            video.audio.write_audiofile(audio_path, fps=16000, codec='pcm_s16le') # convert trimmed video to audio.wav 
-            
-            return audio_path
-        else:
-            # just convert to audio.wav
-            audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-            video.audio.write_audiofile(audio_path, fps=16000, codec='pcm_s16le') # convert trimmed video to audio.wav 
-            return audio_path
+        video.close()
+
+        # Prepare output audio path
+        audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
+
+        # Use ffmpeg to extract & trim audio directly
+        command = [
+            "ffmpeg",
+            "-i", video_path,
+            "-t", str(min(duration, max_duration)),  # Trim if needed
+            "-ar", "16000",  # Resample to 16kHz
+            "-ac", "1",      # Mono
+            "-acodec", "pcm_s16le",  # WAV codec
+            "-y",            # Overwrite if exists
+            audio_path
+        ]
+
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        if result.returncode != 0:
+            st.error("❌ ffmpeg failed to extract audio.")
+            st.code(result.stderr.decode())
+            return None
+
+        return audio_path
+
     except Exception as e:
         st.error(f"❌ Error trimming video: {e}")
+        st.code(traceback.format_exc())
         return None
-        
+
 # --------------------------
 # Utility: Trim audios to 2 minutes
 # --------------------------
