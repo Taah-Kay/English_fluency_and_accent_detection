@@ -27,15 +27,16 @@ AudioSegment.converter = shutil.which("ffmpeg")
 
 def download_audio_as_wav(url, max_filesize_mb=70):
     """
-    Downloads audio from a YouTube URL using yt-dlp, saves to .mp3, then converts to .wav using ffmpeg.
+    Downloads audio from a URL using yt-dlp, extracts to mp3,
+    then converts it to WAV using ffmpeg. Ensures file size is within the limit.
+    Returns path to the .wav file or None on failure.
     """
     try:
-        # Temporary file path (directory only, let yt-dlp name the file)
         temp_dir = tempfile.mkdtemp()
-        output_template = os.path.join(temp_dir, "audio.%(ext)s")
         max_bytes = max_filesize_mb * 1024 * 1024
+        output_template = os.path.join(temp_dir, "audio.%(ext)s")
 
-        # Download audio using yt-dlp
+        # Download using yt-dlp
         download_cmd = [
             "yt-dlp",
             "-f", f"bestaudio[filesize<={max_bytes}]",
@@ -51,29 +52,32 @@ def download_audio_as_wav(url, max_filesize_mb=70):
             st.code(result.stderr.decode())
             return None
 
-        # Find the downloaded mp3 file
-        downloaded_files = [f for f in os.listdir(temp_dir) if f.endswith(".mp3")]
-        if not downloaded_files:
-            st.error("❌ No MP3 file was created by yt-dlp.")
+        # Locate downloaded .mp3 file
+        mp3_files = [f for f in os.listdir(temp_dir) if f.endswith(".mp3")]
+        if not mp3_files:
+            st.error("❌ No MP3 file found after download.")
             return None
-        mp3_path = os.path.join(temp_dir, downloaded_files[0])
+        mp3_path = os.path.join(temp_dir, mp3_files[0])
 
-        # Convert to WAV
+        # Convert to .wav using ffmpeg
         temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-        convert_cmd = ["ffmpeg", "-y", "-i", mp3_path, temp_wav.name]
+        convert_cmd = [
+            "ffmpeg", "-y",
+            "-i", mp3_path,
+            temp_wav.name
+        ]
         subprocess.run(convert_cmd, check=True)
 
         return temp_wav.name
 
     except subprocess.CalledProcessError as e:
-        st.error("❌ ffmpeg conversion failed.")
+        st.error("❌ ffmpeg failed during conversion.")
         st.code(str(e))
         return None
 
     except Exception as e:
         st.error(f"❌ Unexpected error: {e}")
         return None
-
 # --------------------------
 # Utility: Trim videos to 2 minutes
 # --------------------------
