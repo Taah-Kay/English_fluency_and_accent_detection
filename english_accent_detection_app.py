@@ -349,6 +349,8 @@ def main():
             
             st.session_state.audio_ready = True      
             st.audio(st.session_state.audio_path , format='audio/wav')
+            mem = psutil.virtual_memory()
+            st.write(f"🔍 Memory used: {mem.percent}%")
                 
             try:
                 st.success("Now filtering language")
