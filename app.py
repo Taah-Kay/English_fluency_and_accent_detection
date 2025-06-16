@@ -47,7 +47,7 @@ if option == "Upload video file":
         audio_path = trim_video(temp_video_path.name)
         st.success("✅ Video uploaded successfully.")
         st.session_state.audio_path = audio_path
-        shutil.rmtree(temp_dir, ignore_errors=True) # clear temporary files
+        
 
 elif option == "Enter Video Url":
     yt_url = st.text_input("Paste YouTube URL")
@@ -58,7 +58,7 @@ elif option == "Enter Video Url":
         if audio_path:
             st.success("✅ Video downloaded successfully.")
             st.session_state.audio_path = audio_path
-            shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
+            
 
 # Transcription and Accent Analysis
 if st.session_state.audio_path and not st.session_state.transcription:
@@ -100,10 +100,10 @@ if st.session_state.transcription:
                 if readable_accent:
                     st.success(f"✅ Accent Detected: **{readable_accent}**")
                     st.info(f"📊 Confidence: {confidence}%")
-                    shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
+                   
                 else:
                     st.warning("Could not determine accent.")
-                    shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
+                    
             except Exception as e:
                 st.error("❌ Failed to analyze accent.")
                 st.code(str(e))
