@@ -27,7 +27,7 @@ This application requires **Python 3.10**. Follow these steps to install and run
 
 ### ✅ 1. Clone the Repository
 
-```bash
+
 git clone https://github.com/Taah-Kay/English_fluency_and_accent_detection.git
 cd English_fluency_and_accent_detection
 
