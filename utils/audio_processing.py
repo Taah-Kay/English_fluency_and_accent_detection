@@ -44,10 +44,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
         temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
         convert_cmd = ["ffmpeg", "-y", "-i", mp3_path, temp_wav.name]
         subprocess.run(convert_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-
-        # Cleanup
-        shutil.rmtree(temp_dir, ignore_errors=True)
-
+        
         return temp_wav.name
 
     except subprocess.CalledProcessError as e:
@@ -56,9 +53,11 @@ def download_audio_as_wav(url, max_filesize_mb=70):
         return None
 
     finally:
-        os.remove(mp3_path)
-        os.remove(mp3_files )
-        shutil.rmtree(temp_dir, ignore_errors=True)
+        # Clean up intermediate files
+        if mp3_path and os.path.exists(mp3_path):
+            os.remove(mp3_path)
+        if temp_dir and os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir, ignore_errors=True)
 # --------------------------
 # Utility: Trim audios to 2 minutes
 # --------------------------
@@ -81,8 +80,6 @@ def trim_audio(input_wav_path, max_duration_sec=120):
 
     except Exception as e:
         st.error(f"❌ Error trimming audio: {e}")
+        if trimmed_file and os.path.exists(trimmed_file.name):
+            os.remove(trimmed_file.name)
         return None
-        
-    finally:
-        shutil.rmtree(temp_dir, ignore_errors=True)
-# --------------------------
