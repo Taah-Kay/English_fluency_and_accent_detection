@@ -299,7 +299,11 @@ def main():
                 
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-                    st.session_state.transcription, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
+                    segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
+
+                    # Convert segments (generator) to full transcription string
+                    st.session_state.transcription = " ".join([segment.text for segment in segments])
+                    
 
                 except Exception as e:
                             st.error(f"❌ Error filtering audio: {e}")
@@ -313,7 +317,8 @@ def main():
                 else:    
                     # Step 3: Show transcription for audio
                     
-                    st.markdown(" Transcript Preview: ", st.session_state.transcription)
+                    st.markdown(" Transcript Preview")
+                    st.markdown(st.session_state.transcription)
                     st.success("🎵 Audio extracted and ready for analysis!")
                 
                 # Perform accent analysis
