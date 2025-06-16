@@ -36,7 +36,8 @@ def trim_video(video_path, max_duration=120):
         os.remove(audio_path)
         st.code(traceback.format_exc())
         return None
-finally:
+        
+    finally:
         # Clean up input video if it was a temp file
         if "tmp" in video_path and os.path.exists(video_path):
             try:
