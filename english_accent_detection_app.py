@@ -63,11 +63,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
         temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
         convert_cmd = [
             "ffmpeg", "-y",
-            "-i", mp3_path,
-            "-ar", "16000",  # Resample to 16kHz
-            "-ac", "1",      # Mono
-            "-acodec", "pcm_s16le",  # WAV codec
-            "-y",       
+            "-i", mp3_path,       
             temp_wav.name
         ]
         subprocess.run(convert_cmd, check=True)
