@@ -102,7 +102,7 @@ if st.session_state.transcription:
                     shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
                 else:
                     st.warning("Could not determine accent.")
-                     shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
+                    shutil.rmtree(temp_dir, ignore_errors=True)  # clear temporary files
             except Exception as e:
                 st.error("❌ Failed to analyze accent.")
                 st.code(str(e))
