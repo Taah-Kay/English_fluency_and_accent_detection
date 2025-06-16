@@ -191,7 +191,7 @@ def load_accent_model():
 # Load Whisper model (tiny version for speed)
 @st.cache_resource
 def load_whisper():
-    return WhisperModel("tiny", device="cpu")
+    return WhisperModel("tiny", device="cpu", compute_type="float32")
 
 # -------------------------------
 # Accent Prediction
