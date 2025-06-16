@@ -23,6 +23,6 @@ def load_accent_model():
         st.error(f"❌ Error loading model: {e}")
         st.stop()
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Loading Whisper...")
 def load_whisper():
     return WhisperModel("tiny", device="cpu")
