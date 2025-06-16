@@ -359,7 +359,7 @@ def main():
                         st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
                     else:    
                     # Show transcription for audio
-                        with st.spinner("Transcribing audio...")
+                        with st.spinner("Transcribing audio..."):
                             st.markdown(" Transcript Preview")
                             st.markdown(st.session_state.transcription)
                             st.success("🎵 Audio extracted and ready for analysis!")
