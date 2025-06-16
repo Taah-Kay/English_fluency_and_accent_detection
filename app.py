@@ -7,7 +7,7 @@ import torchaudio
 
 from utils.audio_processing import trim_audio, download_audio_as_wav
 from utils.video_processing import trim_video
-from utils.model_loader import load_accent_model, load_whisper
+from models.model_loader import load_accent_model, load_whisper
 from utils.accent_analysis import analyze_accent
 from utils.session_utils import initialize_session_state, display_memory_once, reset_session_state_except_model
 
