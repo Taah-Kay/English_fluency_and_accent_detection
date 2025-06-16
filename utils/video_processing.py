@@ -3,6 +3,7 @@ import subprocess
 from moviepy.editor import VideoFileClip
 import streamlit as st
 import traceback
+import shutil
 
 
 # --------------------------
@@ -33,3 +34,5 @@ def trim_video(video_path, max_duration=120):
         st.error(f"❌ Error trimming video: {e}")
         st.code(traceback.format_exc())
         return None
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
