@@ -308,7 +308,7 @@ def main():
     
 
     # Input selection
-    option = st.radio("Choose input method:", ["Upload video file","Enter Url link"])
+    option = st.radio("Choose input method:", ["Upload video file","Enter Video Url"])
     
 
     # File uploader option
@@ -324,7 +324,7 @@ def main():
 
   
       #YouTube video downloads
-    elif option == "Enter YouTube link":
+    elif option == "Enter Video Url":
         yt_url = st.text_input("Paste YouTube")
         if st.button("Download from Social Media"):
             audio_path = download_audio_as_wav(yt_url)
