@@ -27,21 +27,21 @@ AudioSegment.converter = shutil.which("ffmpeg")
 
 def download_audio_as_wav(url, max_filesize_mb=70):
     """
-    Downloads audio from a YouTube (or other) URL using yt-dlp, extracts to mp3,
-    then converts it to WAV using ffmpeg. Ensures file size is within the limit.
-    Returns path to the .wav file.
+    Downloads audio from a YouTube URL using yt-dlp, saves to .mp3, then converts to .wav using ffmpeg.
     """
     try:
-        #Download mp3
-        temp_mp3 = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+        # Temporary file path (directory only, let yt-dlp name the file)
+        temp_dir = tempfile.mkdtemp()
+        output_template = os.path.join(temp_dir, "audio.%(ext)s")
         max_bytes = max_filesize_mb * 1024 * 1024
 
+        # Download audio using yt-dlp
         download_cmd = [
             "yt-dlp",
             "-f", f"bestaudio[filesize<={max_bytes}]",
             "--extract-audio",
             "--audio-format", "mp3",
-            "-o", temp_mp3.name,
+            "-o", output_template,
             url
         ]
 
@@ -51,22 +51,23 @@ def download_audio_as_wav(url, max_filesize_mb=70):
             st.code(result.stderr.decode())
             return None
 
+        # Find the downloaded mp3 file
+        downloaded_files = [f for f in os.listdir(temp_dir) if f.endswith(".mp3")]
+        if not downloaded_files:
+            st.error("❌ No MP3 file was created by yt-dlp.")
+            return None
+        mp3_path = os.path.join(temp_dir, downloaded_files[0])
+
         # Convert to WAV
         temp_wav = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-        convert_cmd = [
-            "ffmpeg", "-y",  # Overwrite if exists
-            "-i", temp_mp3.name,
-            temp_wav.name
-        ]
+        convert_cmd = ["ffmpeg", "-y", "-i", mp3_path, temp_wav.name]
         subprocess.run(convert_cmd, check=True)
-
-        # clean up the mp3 file
-        os.remove(temp_mp3.name)
 
         return temp_wav.name
 
-    except subprocess.CalledProcessError:
-        st.error("❌ Download or conversion failed. The video may be too long or unsupported.")
+    except subprocess.CalledProcessError as e:
+        st.error("❌ ffmpeg conversion failed.")
+        st.code(str(e))
         return None
 
     except Exception as e:
