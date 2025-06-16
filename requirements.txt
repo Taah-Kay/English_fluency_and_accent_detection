@@ -4,7 +4,7 @@ ffmpeg-python
 requests
 speechbrain==0.5.14
 faster-whisper
-transformers>=4.30.0
+transformers==4.25.1
 numpy==1.23.5
 numba==0.56.4
 datasets==2.8.0
