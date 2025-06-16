@@ -55,9 +55,10 @@ def download_audio_as_wav(url, max_filesize_mb=70):
         st.code(e.stderr.decode() if hasattr(e, 'stderr') else str(e))
         return None
 
-    except Exception as e:
-        st.error(f"❌ Unexpected error: {e}")
-        return None
+    finally:
+        os.remove(mp3_path)
+        os.remove(mp3_files )
+        shutil.rmtree(temp_dir, ignore_errors=True)
 # --------------------------
 # Utility: Trim audios to 2 minutes
 # --------------------------
@@ -81,3 +82,7 @@ def trim_audio(input_wav_path, max_duration_sec=120):
     except Exception as e:
         st.error(f"❌ Error trimming audio: {e}")
         return None
+        
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+# --------------------------
