@@ -50,14 +50,13 @@ def download_audio_as_wav(url, max_filesize_mb=70):
     except subprocess.CalledProcessError as e:
         st.error("❌ Audio download or conversion failed.")
         st.code(e.stderr.decode() if hasattr(e, 'stderr') else str(e))
-        return None
-
-    finally:
-        # Clean up intermediate files
         if mp3_path and os.path.exists(mp3_path):
             os.remove(mp3_path)
         if temp_dir and os.path.exists(temp_dir):
             shutil.rmtree(temp_dir, ignore_errors=True)
+        return None
+
+    
 # --------------------------
 # Utility: Trim audios to 2 minutes
 # --------------------------
