@@ -320,7 +320,7 @@ def main():
         if st.button("Extract Audio"):
             
             st.session_state.audio_ready = True      
-            if if st.session_state.audio_path:
+            if st.session_state.audio_path:
                 st.audio(st.session_state.audio_path , format='audio/wav')
                 
                 try:
