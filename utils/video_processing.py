@@ -26,13 +26,20 @@ def trim_video(video_path, max_duration=120):
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
             st.error("❌ ffmpeg audio extraction failed.")
+            os.remove(audio_path)  # Clean up failed temp file
             st.code(result.stderr.decode())
             return None
 
         return audio_path
     except Exception as e:
         st.error(f"❌ Error trimming video: {e}")
+        os.remove(audio_path)
         st.code(traceback.format_exc())
         return None
-    finally:
-        shutil.rmtree(temp_dir, ignore_errors=True)
+finally:
+        # Clean up input video if it was a temp file
+        if "tmp" in video_path and os.path.exists(video_path):
+            try:
+                os.remove(video_path)
+            except Exception:
+                pass  # Avoid crashing on cleanup
