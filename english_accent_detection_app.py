@@ -136,7 +136,7 @@ def load_accent_model():
 # Load Whisper model (tiny version for speed)
 @st.cache_resource
 def load_whisper():
-    return pipeline("automatic-speech-recognition", model="openai/whisper-tiny", device="cpu")
+    return pipeline("automatic-speech-recognition", model="openai/whisper-small", device="cpu")
 # -------------------------------
 # Accent Prediction
 # -------------------------------
