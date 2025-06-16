@@ -10,6 +10,7 @@ from utils.video_processing import trim_video
 from models.model_loader import load_accent_model, load_whisper
 from utils.accent_analysis import analyze_accent
 from utils.session_utils import initialize_session_state, display_memory_once, reset_session_state_except_model
+from models.custom_interface import CustomEncoderWav2vec2Classifier
 
 st.title("🎙️ English Accent Audio Detector")
 
