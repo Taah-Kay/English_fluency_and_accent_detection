@@ -9,7 +9,7 @@ import subprocess
 import torchaudio
 import torch
 from speechbrain.pretrained.interfaces import foreign_class
-from transformers import pipeline
+from faster_whisper import WhisperModel
 from huggingface_hub import login
 import psutil
 import traceback
@@ -136,7 +136,8 @@ def load_accent_model():
 # Load Whisper model (tiny version for speed)
 @st.cache_resource
 def load_whisper():
-    return pipeline("automatic-speech-recognition", model="openai/whisper-small", device="cpu")
+    return WhisperModel("tiny", device="cpu")
+
 # -------------------------------
 # Accent Prediction
 # -------------------------------
@@ -298,21 +299,20 @@ def main():
                 
                 try:
                 # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-                    whisper_result = st.session_state.whisper(audio_path, return_language=True)
-                    lang = whisper_result.get('chunks', [{}])[0].get('language', None)
+                    st.session_state.transcription, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
 
                 except Exception as e:
                             st.error(f"❌ Error filtering audio: {e}")
                             st.stop()
 
                   
-                if lang is None or lang.lower() not in ["en", "english"]:
+                if info.language != "en":
                         os.remove(video_path)
                         os.remove(audio_path)
                         st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
                 else:    
                     # Step 3: Show transcription for audio
-                    st.session_state.transcription = whisper_result.get('text', '')[:200]
+                    
                     st.markdown(" Transcript Preview: ", st.session_state.transcription)
                     st.success("🎵 Audio extracted and ready for analysis!")
                 
