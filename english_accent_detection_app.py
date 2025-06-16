@@ -8,36 +8,18 @@ import tempfile
 import subprocess
 import torchaudio
 import torch
-from pydub import AudioSegment
 from speechbrain.pretrained.interfaces import foreign_class
 from faster_whisper import WhisperModel
 from huggingface_hub import login
 import psutil
 import traceback
+from pydub import AudioSegment
+AudioSegment.converter = shutil.which("ffmpeg")
 
 
 # -------------------------------
 # Utility Function: Download Video
 # -------------------------------
-def download_video_from_url(url):
-    """
-    Downloads a video from the given URL and saves it to a temporary file.
-    Returns the path to the saved file.
-    """
-    try:
-        response = requests.get(url, stream=True)
-        if response.status_code == 200:
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
-            with open(temp_file.name, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
-            return temp_file.name
-        else:
-            st.error("❌ Failed to download video from the URL.")
-            return None
-    except Exception as e:
-        st.error(f"❌ Error downloading video: {e}")
-        return None
 
 def download_audio_as_wav(url, max_filesize_mb=70):
     """
@@ -330,8 +312,8 @@ def main():
     
 
     # Input selection
-    option = st.radio("Choose input method:", ["Upload video file", "Enter direct MP4 URL","Enter YouTube link"])
-    video_path = None
+    option = st.radio("Choose input method:", ["Upload video file","Enter Url link"])
+    
 
     # File uploader option
     if option == "Upload video file":
@@ -351,7 +333,7 @@ def main():
         if st.button("Download from Social Media"):
             audio_path = download_audio_as_wav(yt_url)
             audio_path = trim_audio(audio_path)      
-            if video_path:
+            if audio_path:
                 st.success("✅ Video downloaded successfully.")
                 st.session_state.audio_path = audio_path 
 
