@@ -347,28 +347,28 @@ def main():
                 st.audio(st.session_state.audio_path , format='audio/wav')
                 
                 try:
-                # Step 1: Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
+                # Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
                     segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
 
                     # Convert segments (generator) to full transcription string
                     st.session_state.transcription = " ".join([segment.text for segment in segments])
                     
-
+                    if info.language != "en":
+                    
+                        os.remove(audio_path)
+                        st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
+                    else:    
+                    # Show transcription for audio
+                        with st.spinner("Transcribing audio...")
+                            st.markdown(" Transcript Preview")
+                            st.markdown(st.session_state.transcription)
+                            st.success("🎵 Audio extracted and ready for analysis!")
                 except Exception as e:
                             st.error(f"❌ Error filtering audio: {e}")
                             st.stop()
 
                   
-                if info.language != "en":
-                    
-                        os.remove(audio_path)
-                        st.error("❌ This video does not appear to be in English. Please provide a clear English video.")
-                else:    
-                    # Step 3: Show transcription for audio
-                    
-                    st.markdown(" Transcript Preview")
-                    st.markdown(st.session_state.transcription)
-                    st.success("🎵 Audio extracted and ready for analysis!")
+                
                 
                 # Perform accent analysis
                  
