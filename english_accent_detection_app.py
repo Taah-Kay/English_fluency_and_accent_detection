@@ -326,9 +326,10 @@ def main():
       #YouTube video downloads
     elif option == "Enter Video Url":
         yt_url = st.text_input("Paste YouTube")
-        if st.button("Download from Social Media"):
-            audio_path = download_audio_as_wav(yt_url)
-            audio_path = trim_audio(audio_path)      
+        if st.button("Download Video"):
+            with st.spinner("Downloading video..."):
+                audio_path = download_audio_as_wav(yt_url)
+                audio_path = trim_audio(audio_path)      
             if audio_path:
                 st.success("✅ Video downloaded successfully.")
                 st.session_state.audio_path = audio_path 
@@ -357,6 +358,8 @@ def main():
                         st.markdown(" Transcript Preview")
                         st.markdown(st.session_state.transcription)
                         st.success("🎵 Audio extracted and ready for analysis!")
+                        mem = psutil.virtual_memory()
+                        st.write(f"🔍 Memory used: {mem.percent}%")
             except Exception as e:
                         st.error(f"❌ Error filtering audio: {e}")
                         st.stop()
