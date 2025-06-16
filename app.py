@@ -68,7 +68,7 @@ if st.session_state.audio_path and not st.session_state.transcription:
         mem = psutil.virtual_memory()
         st.write(f"🔍 Memory used: {mem.percent}%")    
         #Detect Language AND FILTER OUT NON-ENGLISH AUDIOS FOR ANALYSIS
-        segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=5)
+        segments, info = st.session_state.whisper.transcribe(st.session_state.audio_path, beam_size=1)
             
         # Convert segments (generator) to full transcription string
         st.session_state.transcription = " ".join([segment.text for segment in segments])
