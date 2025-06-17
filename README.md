@@ -31,15 +31,15 @@ This application requires **Python 3.10**. Follow these steps to install and run
 git clone https://github.com/Taah-Kay/English_fluency_and_accent_detection.git
 cd English_fluency_and_accent_detection
 
-🐍 2. Set Up a Virtual Environment (Recommended)
+### 🐍 2. Set Up a Virtual Environment (Recommended)
 python3.10 -m venv venv
 source venv/bin/activate         # On Windows: venv\Scripts\activate
 
-📦 3. Install Python Requirements
+### 📦 3. Install Python Requirements
 Make sure you're in the root folder, then run:
 pip install -r requirements.txt
 
-🛠️ 4. Install System Dependencies
+### 🛠️ 4. Install System Dependencies
 This app uses ffmpeg for audio/video processing. Install it based on your OS:
 Ubuntu/Debian:
 sudo apt update
@@ -51,7 +51,7 @@ brew install ffmpeg
 Windows:
 Download from https://ffmpeg.org/download.html and add it to your system PATH.
 
-🔐 5. Set Your Hugging Face Token
+### 🔐 5. Set Your Hugging Face Token
 The app uses models from Hugging Face. You need an access token:
 
 Create a token at: https://huggingface.co/settings/tokens
@@ -61,13 +61,13 @@ export HF_TOKEN=your_token_here        # Linux/macOS
 set HF_TOKEN=your_token_here           # Windows CMD
 $env:HF_TOKEN="your_token_here"        # Windows PowerShell
 
-▶️ 6. Run the App
+### ▶️ 6. Run the App
 Launch the Streamlit app:
 streamlit run app.py
 Then open your browser at: http://localhost:8501
 
 
-## 📁 Project Structure
+### 📁 Project Structure
 📦  English Accent Audio Detector/
 │
 ├── app.py                      # Main Streamlit application
@@ -88,7 +88,7 @@ Then open your browser at: http://localhost:8501
 │   └── model_loader.py         # Loads Wav2Vec2 and Whisper models
 
 
-🚀 How to Use
+### 🚀 How to Use
 1.Run the app:
 2.Choose Input Method:
 
@@ -111,7 +111,7 @@ Or paste a valid YouTube URL.
 
   Displays the detected accent and confidence score.
 
-🧠 Supported English Accents
+### 🧠 Supported English Accents
 American
 
 British
@@ -144,19 +144,19 @@ Hong Kong
 
 South Atlantic
 
-🛠️ Troubleshooting
+### 🛠️ Troubleshooting
 FFmpeg Not Found: Ensure it’s installed and accessible from the terminal/command prompt.
 
 Model Load Errors: Ensure your Hugging Face token is valid.
 
 Audio Errors: Use clear, spoken English in the video/audio source.
 
-📬 Contact
+### 📬 Contact
 Created by Ryan Kembo
 📧 kemboryan@gmail.com
 🔗https://github.com/Taah-Kay
 
-🧾 Citation & Acknowledgements
+### 🧾 Citation & Acknowledgements
 This app uses the Accent-ID model from Hugging Face:
 
 Juan Pablo Zuluaga – Jzuluaga/accent-id-commonaccent_xlsr-en-english
