@@ -72,6 +72,7 @@ Then open your browser at: http://localhost:8501
 
 ### 🚀 How to Use
 1.Run the app:
+
 2.Choose Input Method:
 
 Upload a video file (.mp4, .mov, .avi, .mkv)
