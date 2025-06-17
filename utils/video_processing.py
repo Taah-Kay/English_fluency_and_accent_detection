@@ -8,7 +8,7 @@ import shutil
 
 
 # --------------------------
-# Utility: Trim videos to 2 minutes
+# Trim videos to 2 minutes
 # --------------------------
 def trim_video(video_path, max_duration=120):
     """Trims video to max_duration (in seconds) and extracts audio."""
@@ -26,14 +26,14 @@ def trim_video(video_path, max_duration=120):
         ]
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode != 0:
-            st.error("❌ ffmpeg audio extraction failed.")
+            st.error("ffmpeg audio extraction failed.")
             os.remove(audio_path)  # Clean up failed temp file
             st.code(result.stderr.decode())
             return None
 
         return audio_path
     except Exception as e:
-        st.error(f"❌ Error trimming video: {e}")
+        st.error(f"Error trimming video: {e}")
         os.remove(audio_path)
         st.code(traceback.format_exc())
         return None
