@@ -52,19 +52,19 @@ Windows:
 Download from https://ffmpeg.org/download.html and add it to your system PATH.
 
 * 🔐 5. Set Your Hugging Face Token
-The app uses models from Hugging Face. You need an access token:
+  * The app uses models from Hugging Face. You need an access token:
 
-Create a token at: https://huggingface.co/settings/tokens
+  * Create a token at: https://huggingface.co/settings/tokens
 
-Then set it as an environment variable:
-export HF_TOKEN=your_token_here        # Linux/macOS
-set HF_TOKEN=your_token_here           # Windows CMD
-$env:HF_TOKEN="your_token_here"        # Windows PowerShell
+  Then set it as an environment variable:
+   * export HF_TOKEN=your_token_here        # Linux/macOS
+   * set HF_TOKEN=your_token_here           # Windows CMD
+   * $env:HF_TOKEN="your_token_here"        # Windows PowerShell
 
 * ▶️ 6. Run the App
-Launch the Streamlit app:
-streamlit run app.py
-Then open your browser at: http://localhost:8501
+ Launch the Streamlit app:
+ streamlit run app.py
+ Then open your browser at: http://localhost:8501
 
 ### 📁 Project Structure
 <pre lang="text"> English_Accent_Audio_Detector/ ├── app.py # Main Streamlit application ├── README.md # Project documentation with usage instructions ├── requirements.txt # Python dependencies ├── packages.txt # System-level packages (e.g., ffmpeg) ├── utils/ # Utility modules │ ├── __init__.py # Makes utils a package │ ├── accent_analysis.py # Logic for analyzing and classifying accents │ ├── audio_processing.py# Audio trimming and processing │ ├── session_utils.py # Session state utilities │ └── video_processing.py# YouTube/video handling ├── models/ # Model management ├── __init__.py # Makes models a package ├── custom_interface.py# HuggingFace interface for the model └── model_loader.py # Loads Wav2Vec2 and Whisper models </pre>
