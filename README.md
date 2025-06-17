@@ -7,13 +7,13 @@ This Streamlit web application detects the English accent of a speaker in a vide
 
 * 🎧 Automatic audio extraction and trimming (max 2 minutes)
 
-🗣️ Transcription and English language filtering
+* 🗣️ Transcription and English language filtering
 
-🧠 Accent classification using a Wav2Vec2-based model
+* 🧠 Accent classification using a Wav2Vec2-based model
 
-💬 Clear display of the speaker's accent and confidence score
+* 💬 Clear display of the speaker's accent and confidence score
 
-🧪 Model Information
+### 🧪 Model Information
 This app uses the Accent-ID model developed by Juan Pablo Zuluaga on the CommonAccent dataset.
 
 The model is implemented using the SpeechBrain toolkit, a powerful open-source speech processing framework built on PyTorch.
@@ -25,21 +25,21 @@ This application requires **Python 3.10**. Follow these steps to install and run
 
 ---
 
-### ✅ 1. Clone the Repository
+* ✅ 1. Clone the Repository
 
 
 git clone https://github.com/Taah-Kay/English_fluency_and_accent_detection.git
 cd English_fluency_and_accent_detection
 
-### 🐍 2. Set Up a Virtual Environment (Recommended)
+* 🐍 2. Set Up a Virtual Environment (Recommended)
 python3.10 -m venv venv
 source venv/bin/activate         # On Windows: venv\Scripts\activate
 
-### 📦 3. Install Python Requirements
+* 📦 3. Install Python Requirements
 Make sure you're in the root folder, then run:
 pip install -r requirements.txt
 
-### 🛠️ 4. Install System Dependencies
+* 🛠️ 4. Install System Dependencies
 This app uses ffmpeg for audio/video processing. Install it based on your OS:
 Ubuntu/Debian:
 sudo apt update
@@ -51,7 +51,7 @@ brew install ffmpeg
 Windows:
 Download from https://ffmpeg.org/download.html and add it to your system PATH.
 
-### 🔐 5. Set Your Hugging Face Token
+* 🔐 5. Set Your Hugging Face Token
 The app uses models from Hugging Face. You need an access token:
 
 Create a token at: https://huggingface.co/settings/tokens
@@ -61,7 +61,7 @@ export HF_TOKEN=your_token_here        # Linux/macOS
 set HF_TOKEN=your_token_here           # Windows CMD
 $env:HF_TOKEN="your_token_here"        # Windows PowerShell
 
-### ▶️ 6. Run the App
+* ▶️ 6. Run the App
 Launch the Streamlit app:
 streamlit run app.py
 Then open your browser at: http://localhost:8501
@@ -71,61 +71,46 @@ Then open your browser at: http://localhost:8501
 
 
 ### 🚀 How to Use
-1.Run the app:
+* Run the app:
 
-2.Choose Input Method:
+* Choose Input Method:
 
-Upload a video file (.mp4, .mov, .avi, .mkv)
+  * Upload a video file (.mp4, .mov, .avi, .mkv)
 
-Or paste a valid YouTube URL.
+  * Or paste a valid YouTube URL.
 
-3.Click "Download Video" (for YouTube) or upload file directly.
+* Click "Download Video" (for YouTube) or upload file directly.
 
-4.Click "Extract Audio"
+* Click "Extract Audio"
   The app:
 
-  Extracts and trims audio to 2 minutes
+    * Extracts and trims audio to 2 minutes
 
-  Transcribes the content
+    * Transcribes the content
 
-  Checks for English language
+    * Checks for English language
 
-5.Click "Analyze Accent"
+* Click "Analyze Accent"
 
   Displays the detected accent and confidence score.
 
 ### 🧠 Supported English Accents
-American
-
-British
-
-Australian
-
-Indian
-
-Canadian
-
-Bermudian
-
-Scottish
-
-African
-
-Irish
-
-New Zealand
-
-Welsh
-
-Malaysian
-
-Philippine
-
-Singaporean
-
-Hong Kong
-
-South Atlantic
+* American
+* British
+* Australian
+* Indian
+* Canadian
+* Bermudian
+* Scottish
+* African
+* Irish
+* New Zealand
+* Welsh
+* Malaysian
+* Philippine
+* Singaporean
+* Hong Kong
+* South Atlantic
 
 ### 🛠️ Troubleshooting
 FFmpeg Not Found: Ensure it’s installed and accessible from the terminal/command prompt.
