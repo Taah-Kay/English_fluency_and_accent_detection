@@ -20,7 +20,7 @@ def load_accent_model():
             classname="CustomEncoderWav2vec2Classifier"
         )
     except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
+        st.error(f"Error loading model: {e}")
         st.stop()
 
 @st.cache_resource(show_spinner="Loading Whisper...")
