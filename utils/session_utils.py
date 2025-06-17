@@ -19,7 +19,7 @@ def initialize_session_state():
 def display_memory_once():
     if 'memory_logged' not in st.session_state:
         mem = psutil.virtual_memory()
-        st.markdown(f"🧠 **Memory Used:** {mem.percent}%")
+        st.markdown(f"**Memory Used:** {mem.percent}%")
         st.session_state.memory_logged = True
 
 # Reset the app
