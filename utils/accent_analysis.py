@@ -46,6 +46,6 @@ def analyze_accent(audio_tensor, sample_rate, model):
             readable = ACCENT_LABELS.get(accent_label, accent_label.title() + " accent")
             return readable, round(score[0].item() * 100, 2)
     except Exception:
-        st.error("❌ Error during classification.")
+        st.error("Error during classification.")
         st.code(traceback.format_exc())
         return None, None
