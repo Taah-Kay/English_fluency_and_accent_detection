@@ -68,24 +68,26 @@ Then open your browser at: http://localhost:8501
 
 
 ### 📁 Project Structure
-📦  English Accent Audio Detector/
-│
-├── app.py                      # Main Streamlit application
-├── README.md                   # Project documentation with usage instructions
-├── requirements.txt            # Python dependencies
-├── packages.txt                # System-level packages (e.g., ffmpeg for video/audio)
-│
-├── utils/                      # Utility modules
-│   ├── __init__.py             # Makes utils a package
-│   ├── accent_analysis.py      # Logic for analyzing and classifying accents
-│   ├── audio_processing.py     # Functions for trimming and processing audio
-│   ├── session_utils.py        # Session state initialization and memory tracking
-│   └── video_processing.py     # YouTube and video handling (download, trimming)
-│
-├── models/                     # Model management
-│   ├── __init__.py             # Makes models a package
-│   ├── custom_interface.py     # Custom HuggingFace interface for accent model
-│   └── model_loader.py         # Loads Wav2Vec2 and Whisper models
+
+```
+English_Accent_Audio_Detector/
+├── app.py                  # Main Streamlit application
+├── README.md               # Project documentation with usage instructions
+├── requirements.txt        # Python dependencies
+├── packages.txt            # System-level packages (e.g., ffmpeg for video/audio)
+
+├── utils/                  # Utility modules
+│   ├── __init__.py         # Makes utils a package
+│   ├── accent_analysis.py  # Logic for analyzing and classifying accents
+│   ├── audio_processing.py # Functions for trimming and processing audio
+│   ├── session_utils.py    # Session state initialization and memory tracking
+│   └── video_processing.py # YouTube and video handling (download, trimming)
+
+├── models/                 # Model management
+    ├── __init__.py         # Makes models a package
+    ├── custom_interface.py # Custom HuggingFace interface for accent model
+    └── model_loader.py     # Loads Wav2Vec2 and Whisper models
+```
 
 
 ### 🚀 How to Use
