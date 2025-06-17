@@ -3,9 +3,9 @@
 This Streamlit web application detects the English accent of a speaker in a video or audio file. It leverages pre-trained machine learning models and allows users to upload a video or input a YouTube URL. The app extracts and trims the audio, transcribes the speech, filters for English language, and then predicts the accent from a set of common English accents.
 
 🚀 Features
-✅ Upload videos or provide YouTube/video url links
+* ✅ Upload videos or provide YouTube/video url links
 
-🎧 Automatic audio extraction and trimming (max 2 minutes)
+* 🎧 Automatic audio extraction and trimming (max 2 minutes)
 
 🗣️ Transcription and English language filtering
 
