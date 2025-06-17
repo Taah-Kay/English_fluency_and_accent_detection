@@ -8,7 +8,7 @@ import shutil
 AudioSegment.converter = shutil.which("ffmpeg")
 
 # -------------------------------
-# Utility Function: Download audio from a Video url
+# Download audio from a Video url
 # -------------------------------
 def download_audio_as_wav(url, max_filesize_mb=70):
     """
@@ -49,7 +49,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
                     break
 
             if not audio_path or not os.path.exists(audio_path):
-                st.error("❌ No supported audio file found after download.")
+                st.error("No supported audio file found after download.")
                 return None
 
             # Convert to WAV (outside temp_dir so it persists)
@@ -63,7 +63,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
     except subprocess.CalledProcessError as e:
         error_msg = e.stderr.decode() if hasattr(e, "stderr") else str(e)
         if "st" in globals():
-            st.error("❌ Audio download or conversion failed.")
+            st.error("Audio download or conversion failed.")
             st.code(error_msg)
         else:
             print("Error during processing:", error_msg)
@@ -74,7 +74,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
 
     except Exception as e:
         if "st" in globals():
-            st.error("❌ Unexpected error occurred.")
+            st.error("Unexpected error occurred.")
             st.code(str(e))
         else:
             print("Unexpected error:", e)
@@ -83,7 +83,7 @@ def download_audio_as_wav(url, max_filesize_mb=70):
         return None
     
 # --------------------------
-# Utility: Trim audios to 2 minutes
+# Trim audios to 2 minutes
 # --------------------------
 def trim_audio(input_wav_path, max_duration_sec=120):
     """
@@ -103,7 +103,7 @@ def trim_audio(input_wav_path, max_duration_sec=120):
         return trimmed_file.name
 
     except Exception as e:
-        st.error(f"❌ Error trimming audio: {e}")
+        st.error(f"Error trimming audio: {e}")
         if trimmed_file and os.path.exists(trimmed_file.name):
             os.remove(trimmed_file.name)
         return None
