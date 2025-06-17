@@ -66,8 +66,8 @@ Launch the Streamlit app:
 streamlit run app.py
 Then open your browser at: http://localhost:8501
 
-
-<pre lang="text"> 📁 Project Structure English_Accent_Audio_Detector/ ├── app.py # Main Streamlit application ├── README.md # Project documentation with usage instructions ├── requirements.txt # Python dependencies ├── packages.txt # System-level packages (e.g., ffmpeg) ├── utils/ # Utility modules │ ├── __init__.py # Makes utils a package │ ├── accent_analysis.py # Logic for analyzing and classifying accents │ ├── audio_processing.py# Audio trimming and processing │ ├── session_utils.py # Session state utilities │ └── video_processing.py# YouTube/video handling ├── models/ # Model management ├── __init__.py # Makes models a package ├── custom_interface.py# HuggingFace interface for the model └── model_loader.py # Loads Wav2Vec2 and Whisper models </pre>
+### 📁 Project Structure
+<pre lang="text"> English_Accent_Audio_Detector/ ├── app.py # Main Streamlit application ├── README.md # Project documentation with usage instructions ├── requirements.txt # Python dependencies ├── packages.txt # System-level packages (e.g., ffmpeg) ├── utils/ # Utility modules │ ├── __init__.py # Makes utils a package │ ├── accent_analysis.py # Logic for analyzing and classifying accents │ ├── audio_processing.py# Audio trimming and processing │ ├── session_utils.py # Session state utilities │ └── video_processing.py# YouTube/video handling ├── models/ # Model management ├── __init__.py # Makes models a package ├── custom_interface.py# HuggingFace interface for the model └── model_loader.py # Loads Wav2Vec2 and Whisper models </pre>
 
 
 ### 🚀 How to Use
