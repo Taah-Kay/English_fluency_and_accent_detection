@@ -15,7 +15,7 @@ def initialize_session_state():
         if k not in st.session_state:
             st.session_state[k] = v
 
-# 🔍 Show memory info after 
+# Show memory info after 
 def display_memory_once():
     if 'memory_logged' not in st.session_state:
         mem = psutil.virtual_memory()
